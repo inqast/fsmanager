@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    networks:
+      - service
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "8082:8082" # gRPC
+    volumes:
+      - ./config.yml:/root/config.yml
+
+  postgres:
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fsmanager_api
+      APP_DB_USER: docker
+      APP_DB_PASS: docker
+    networks:
+      - service
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    volumes:
+      - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./docker/postgres/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+      - ./_data/pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  service:
+    driver: bridge

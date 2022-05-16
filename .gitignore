@@ -1,0 +1,6 @@
+.vscode/
+.idea/
+.cache
+.venv
+bin/
+_data/
