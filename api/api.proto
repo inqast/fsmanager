@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+option go_package = "github.com/inqast/fsmanager/api";
+
+package api;
+
+import "google/protobuf/empty.proto";
+
+message ID {
+  int64 id = 1;
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string pwd = 3;
+  string createdAt = 4;
+}
+
+message Subscription {
+  int64 id = 1;
+  int64 ownerID = 2;
+  string serviceName = 3;
+  int64 capacity = 4;
+  int64 priceInCentiUnits = 5;
+  string  paymentDate = 6;
+  string createdAt = 7;
+}
+
+message GetSubscriptionsResponse{
+  repeated Subscription subscriptions = 1;
+}
+
+message Subscriber {
+  int64 id = 1;
+  int64 userID = 2;
+  int64 subscriptionID = 3;
+  bool isPaid = 4;
+  bool isOwner = 5;
+  string createdAt = 6;
+}
+
+message GetSubscribersResponse{
+  repeated Subscriber subscribers = 1;
+}
+
+service FamilySub {
+  rpc CreateUser(User) returns (ID) {}
+  rpc ReadUser(ID) returns (User) {}
+  rpc UpdateUser(User) returns (google.protobuf.Empty) {}
+  rpc DeleteUser(ID) returns (google.protobuf.Empty) {}
+
+  rpc CreateSubscription(Subscription) returns (ID) {}
+  rpc ReadSubscription(ID) returns (Subscription) {}
+  rpc UpdateSubscription(Subscription) returns (google.protobuf.Empty) {}
+  rpc DeleteSubscription(ID) returns (google.protobuf.Empty) {}
+
+  rpc CreateSubscriber(Subscriber) returns (ID) {}
+  rpc ReadSubscriber(ID) returns (Subscriber) {}
+  rpc UpdateSubscriber(Subscriber) returns (google.protobuf.Empty) {}
+  rpc DeleteSubscriber(ID) returns (google.protobuf.Empty) {}
+
+  rpc GetSubscribers(ID) returns (GetSubscribersResponse) {}
+  rpc GetSubscriptions(ID) returns (GetSubscriptionsResponse) {}
+}
