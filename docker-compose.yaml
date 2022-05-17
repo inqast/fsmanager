@@ -14,6 +14,7 @@ services:
       - postgres
     ports:
       - "8082:8082" # gRPC
+      - "8081:8081" # gRPC-gateway
     volumes:
       - ./config.yml:/root/config.yml
 

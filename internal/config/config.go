@@ -35,6 +35,14 @@ func (t GrpcConfig) Address() string {
 	return fmt.Sprintf("%s:%s", t.Host, t.Port)
 }
 
+type GrpcGatewayConfig struct {
+	Port string `yaml:"port"`
+}
+
+func (t GrpcGatewayConfig) Address() string {
+	return fmt.Sprintf(":%s", t.Port)
+}
+
 type DatabaseConfig struct {
 	Host           string `yaml:"host"`
 	Port           string `yaml:"port"`
@@ -52,9 +60,10 @@ func (dbconf *DatabaseConfig) GetConnString() string {
 }
 
 type Config struct {
-	loaded   bool
-	Grpc     GrpcConfig     `yaml:"grpc"`
-	Database DatabaseConfig `yaml:"database"`
+	loaded      bool
+	Grpc        GrpcConfig        `yaml:"grpc"`
+	GrpcGateway GrpcGatewayConfig `yaml:"grpc-gateway"`
+	Database    DatabaseConfig    `yaml:"database"`
 }
 
 func ReadConfig(filePath string) error {
