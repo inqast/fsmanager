@@ -54,17 +54,17 @@ type RepositoryMock struct {
 	beforeDeleteUserCounter uint64
 	DeleteUserMock          mRepositoryMockDeleteUser
 
-	funcGetSubscribers          func(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error)
-	inspectFuncGetSubscribers   func(ctx context.Context, i1 int)
-	afterGetSubscribersCounter  uint64
-	beforeGetSubscribersCounter uint64
-	GetSubscribersMock          mRepositoryMockGetSubscribers
+	funcGetSubscribersForSubscription          func(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error)
+	inspectFuncGetSubscribersForSubscription   func(ctx context.Context, i1 int)
+	afterGetSubscribersForSubscriptionCounter  uint64
+	beforeGetSubscribersForSubscriptionCounter uint64
+	GetSubscribersForSubscriptionMock          mRepositoryMockGetSubscribersForSubscription
 
-	funcGetSubscriptions          func(ctx context.Context, i1 int) (sa1 []models.Subscription, err error)
-	inspectFuncGetSubscriptions   func(ctx context.Context, i1 int)
-	afterGetSubscriptionsCounter  uint64
-	beforeGetSubscriptionsCounter uint64
-	GetSubscriptionsMock          mRepositoryMockGetSubscriptions
+	funcGetSubscriptionsForUser          func(ctx context.Context, i1 int) (sa1 []models.Subscription, err error)
+	inspectFuncGetSubscriptionsForUser   func(ctx context.Context, i1 int)
+	afterGetSubscriptionsForUserCounter  uint64
+	beforeGetSubscriptionsForUserCounter uint64
+	GetSubscriptionsForUserMock          mRepositoryMockGetSubscriptionsForUser
 
 	funcReadSubscriber          func(ctx context.Context, i1 int) (s1 models.Subscriber, err error)
 	inspectFuncReadSubscriber   func(ctx context.Context, i1 int)
@@ -128,11 +128,11 @@ func NewRepositoryMock(t minimock.Tester) *RepositoryMock {
 	m.DeleteUserMock = mRepositoryMockDeleteUser{mock: m}
 	m.DeleteUserMock.callArgs = []*RepositoryMockDeleteUserParams{}
 
-	m.GetSubscribersMock = mRepositoryMockGetSubscribers{mock: m}
-	m.GetSubscribersMock.callArgs = []*RepositoryMockGetSubscribersParams{}
+	m.GetSubscribersForSubscriptionMock = mRepositoryMockGetSubscribersForSubscription{mock: m}
+	m.GetSubscribersForSubscriptionMock.callArgs = []*RepositoryMockGetSubscribersForSubscriptionParams{}
 
-	m.GetSubscriptionsMock = mRepositoryMockGetSubscriptions{mock: m}
-	m.GetSubscriptionsMock.callArgs = []*RepositoryMockGetSubscriptionsParams{}
+	m.GetSubscriptionsForUserMock = mRepositoryMockGetSubscriptionsForUser{mock: m}
+	m.GetSubscriptionsForUserMock.callArgs = []*RepositoryMockGetSubscriptionsForUserParams{}
 
 	m.ReadSubscriberMock = mRepositoryMockReadSubscriber{mock: m}
 	m.ReadSubscriberMock.callArgs = []*RepositoryMockReadSubscriberParams{}
@@ -1454,437 +1454,437 @@ func (m *RepositoryMock) MinimockDeleteUserInspect() {
 	}
 }
 
-type mRepositoryMockGetSubscribers struct {
+type mRepositoryMockGetSubscribersForSubscription struct {
 	mock               *RepositoryMock
-	defaultExpectation *RepositoryMockGetSubscribersExpectation
-	expectations       []*RepositoryMockGetSubscribersExpectation
+	defaultExpectation *RepositoryMockGetSubscribersForSubscriptionExpectation
+	expectations       []*RepositoryMockGetSubscribersForSubscriptionExpectation
 
-	callArgs []*RepositoryMockGetSubscribersParams
+	callArgs []*RepositoryMockGetSubscribersForSubscriptionParams
 	mutex    sync.RWMutex
 }
 
-// RepositoryMockGetSubscribersExpectation specifies expectation struct of the Repository.GetSubscribers
-type RepositoryMockGetSubscribersExpectation struct {
+// RepositoryMockGetSubscribersForSubscriptionExpectation specifies expectation struct of the Repository.GetSubscribersForSubscription
+type RepositoryMockGetSubscribersForSubscriptionExpectation struct {
 	mock    *RepositoryMock
-	params  *RepositoryMockGetSubscribersParams
-	results *RepositoryMockGetSubscribersResults
+	params  *RepositoryMockGetSubscribersForSubscriptionParams
+	results *RepositoryMockGetSubscribersForSubscriptionResults
 	Counter uint64
 }
 
-// RepositoryMockGetSubscribersParams contains parameters of the Repository.GetSubscribers
-type RepositoryMockGetSubscribersParams struct {
+// RepositoryMockGetSubscribersForSubscriptionParams contains parameters of the Repository.GetSubscribersForSubscription
+type RepositoryMockGetSubscribersForSubscriptionParams struct {
 	ctx context.Context
 	i1  int
 }
 
-// RepositoryMockGetSubscribersResults contains results of the Repository.GetSubscribers
-type RepositoryMockGetSubscribersResults struct {
+// RepositoryMockGetSubscribersForSubscriptionResults contains results of the Repository.GetSubscribersForSubscription
+type RepositoryMockGetSubscribersForSubscriptionResults struct {
 	sa1 []models.Subscriber
 	err error
 }
 
-// Expect sets up expected params for Repository.GetSubscribers
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) Expect(ctx context.Context, i1 int) *mRepositoryMockGetSubscribers {
-	if mmGetSubscribers.mock.funcGetSubscribers != nil {
-		mmGetSubscribers.mock.t.Fatalf("RepositoryMock.GetSubscribers mock is already set by Set")
+// Expect sets up expected params for Repository.GetSubscribersForSubscription
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) Expect(ctx context.Context, i1 int) *mRepositoryMockGetSubscribersForSubscription {
+	if mmGetSubscribersForSubscription.mock.funcGetSubscribersForSubscription != nil {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("RepositoryMock.GetSubscribersForSubscription mock is already set by Set")
 	}
 
-	if mmGetSubscribers.defaultExpectation == nil {
-		mmGetSubscribers.defaultExpectation = &RepositoryMockGetSubscribersExpectation{}
+	if mmGetSubscribersForSubscription.defaultExpectation == nil {
+		mmGetSubscribersForSubscription.defaultExpectation = &RepositoryMockGetSubscribersForSubscriptionExpectation{}
 	}
 
-	mmGetSubscribers.defaultExpectation.params = &RepositoryMockGetSubscribersParams{ctx, i1}
-	for _, e := range mmGetSubscribers.expectations {
-		if minimock.Equal(e.params, mmGetSubscribers.defaultExpectation.params) {
-			mmGetSubscribers.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetSubscribers.defaultExpectation.params)
+	mmGetSubscribersForSubscription.defaultExpectation.params = &RepositoryMockGetSubscribersForSubscriptionParams{ctx, i1}
+	for _, e := range mmGetSubscribersForSubscription.expectations {
+		if minimock.Equal(e.params, mmGetSubscribersForSubscription.defaultExpectation.params) {
+			mmGetSubscribersForSubscription.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetSubscribersForSubscription.defaultExpectation.params)
 		}
 	}
 
-	return mmGetSubscribers
+	return mmGetSubscribersForSubscription
 }
 
-// Inspect accepts an inspector function that has same arguments as the Repository.GetSubscribers
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) Inspect(f func(ctx context.Context, i1 int)) *mRepositoryMockGetSubscribers {
-	if mmGetSubscribers.mock.inspectFuncGetSubscribers != nil {
-		mmGetSubscribers.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetSubscribers")
+// Inspect accepts an inspector function that has same arguments as the Repository.GetSubscribersForSubscription
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) Inspect(f func(ctx context.Context, i1 int)) *mRepositoryMockGetSubscribersForSubscription {
+	if mmGetSubscribersForSubscription.mock.inspectFuncGetSubscribersForSubscription != nil {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetSubscribersForSubscription")
 	}
 
-	mmGetSubscribers.mock.inspectFuncGetSubscribers = f
+	mmGetSubscribersForSubscription.mock.inspectFuncGetSubscribersForSubscription = f
 
-	return mmGetSubscribers
+	return mmGetSubscribersForSubscription
 }
 
-// Return sets up results that will be returned by Repository.GetSubscribers
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) Return(sa1 []models.Subscriber, err error) *RepositoryMock {
-	if mmGetSubscribers.mock.funcGetSubscribers != nil {
-		mmGetSubscribers.mock.t.Fatalf("RepositoryMock.GetSubscribers mock is already set by Set")
+// Return sets up results that will be returned by Repository.GetSubscribersForSubscription
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) Return(sa1 []models.Subscriber, err error) *RepositoryMock {
+	if mmGetSubscribersForSubscription.mock.funcGetSubscribersForSubscription != nil {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("RepositoryMock.GetSubscribersForSubscription mock is already set by Set")
 	}
 
-	if mmGetSubscribers.defaultExpectation == nil {
-		mmGetSubscribers.defaultExpectation = &RepositoryMockGetSubscribersExpectation{mock: mmGetSubscribers.mock}
+	if mmGetSubscribersForSubscription.defaultExpectation == nil {
+		mmGetSubscribersForSubscription.defaultExpectation = &RepositoryMockGetSubscribersForSubscriptionExpectation{mock: mmGetSubscribersForSubscription.mock}
 	}
-	mmGetSubscribers.defaultExpectation.results = &RepositoryMockGetSubscribersResults{sa1, err}
-	return mmGetSubscribers.mock
+	mmGetSubscribersForSubscription.defaultExpectation.results = &RepositoryMockGetSubscribersForSubscriptionResults{sa1, err}
+	return mmGetSubscribersForSubscription.mock
 }
 
-//Set uses given function f to mock the Repository.GetSubscribers method
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) Set(f func(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error)) *RepositoryMock {
-	if mmGetSubscribers.defaultExpectation != nil {
-		mmGetSubscribers.mock.t.Fatalf("Default expectation is already set for the Repository.GetSubscribers method")
+//Set uses given function f to mock the Repository.GetSubscribersForSubscription method
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) Set(f func(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error)) *RepositoryMock {
+	if mmGetSubscribersForSubscription.defaultExpectation != nil {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("Default expectation is already set for the Repository.GetSubscribersForSubscription method")
 	}
 
-	if len(mmGetSubscribers.expectations) > 0 {
-		mmGetSubscribers.mock.t.Fatalf("Some expectations are already set for the Repository.GetSubscribers method")
+	if len(mmGetSubscribersForSubscription.expectations) > 0 {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("Some expectations are already set for the Repository.GetSubscribersForSubscription method")
 	}
 
-	mmGetSubscribers.mock.funcGetSubscribers = f
-	return mmGetSubscribers.mock
+	mmGetSubscribersForSubscription.mock.funcGetSubscribersForSubscription = f
+	return mmGetSubscribersForSubscription.mock
 }
 
-// When sets expectation for the Repository.GetSubscribers which will trigger the result defined by the following
+// When sets expectation for the Repository.GetSubscribersForSubscription which will trigger the result defined by the following
 // Then helper
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) When(ctx context.Context, i1 int) *RepositoryMockGetSubscribersExpectation {
-	if mmGetSubscribers.mock.funcGetSubscribers != nil {
-		mmGetSubscribers.mock.t.Fatalf("RepositoryMock.GetSubscribers mock is already set by Set")
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) When(ctx context.Context, i1 int) *RepositoryMockGetSubscribersForSubscriptionExpectation {
+	if mmGetSubscribersForSubscription.mock.funcGetSubscribersForSubscription != nil {
+		mmGetSubscribersForSubscription.mock.t.Fatalf("RepositoryMock.GetSubscribersForSubscription mock is already set by Set")
 	}
 
-	expectation := &RepositoryMockGetSubscribersExpectation{
-		mock:   mmGetSubscribers.mock,
-		params: &RepositoryMockGetSubscribersParams{ctx, i1},
+	expectation := &RepositoryMockGetSubscribersForSubscriptionExpectation{
+		mock:   mmGetSubscribersForSubscription.mock,
+		params: &RepositoryMockGetSubscribersForSubscriptionParams{ctx, i1},
 	}
-	mmGetSubscribers.expectations = append(mmGetSubscribers.expectations, expectation)
+	mmGetSubscribersForSubscription.expectations = append(mmGetSubscribersForSubscription.expectations, expectation)
 	return expectation
 }
 
-// Then sets up Repository.GetSubscribers return parameters for the expectation previously defined by the When method
-func (e *RepositoryMockGetSubscribersExpectation) Then(sa1 []models.Subscriber, err error) *RepositoryMock {
-	e.results = &RepositoryMockGetSubscribersResults{sa1, err}
+// Then sets up Repository.GetSubscribersForSubscription return parameters for the expectation previously defined by the When method
+func (e *RepositoryMockGetSubscribersForSubscriptionExpectation) Then(sa1 []models.Subscriber, err error) *RepositoryMock {
+	e.results = &RepositoryMockGetSubscribersForSubscriptionResults{sa1, err}
 	return e.mock
 }
 
-// GetSubscribers implements Repository
-func (mmGetSubscribers *RepositoryMock) GetSubscribers(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error) {
-	mm_atomic.AddUint64(&mmGetSubscribers.beforeGetSubscribersCounter, 1)
-	defer mm_atomic.AddUint64(&mmGetSubscribers.afterGetSubscribersCounter, 1)
+// GetSubscribersForSubscription implements Repository
+func (mmGetSubscribersForSubscription *RepositoryMock) GetSubscribersForSubscription(ctx context.Context, i1 int) (sa1 []models.Subscriber, err error) {
+	mm_atomic.AddUint64(&mmGetSubscribersForSubscription.beforeGetSubscribersForSubscriptionCounter, 1)
+	defer mm_atomic.AddUint64(&mmGetSubscribersForSubscription.afterGetSubscribersForSubscriptionCounter, 1)
 
-	if mmGetSubscribers.inspectFuncGetSubscribers != nil {
-		mmGetSubscribers.inspectFuncGetSubscribers(ctx, i1)
+	if mmGetSubscribersForSubscription.inspectFuncGetSubscribersForSubscription != nil {
+		mmGetSubscribersForSubscription.inspectFuncGetSubscribersForSubscription(ctx, i1)
 	}
 
-	mm_params := &RepositoryMockGetSubscribersParams{ctx, i1}
+	mm_params := &RepositoryMockGetSubscribersForSubscriptionParams{ctx, i1}
 
 	// Record call args
-	mmGetSubscribers.GetSubscribersMock.mutex.Lock()
-	mmGetSubscribers.GetSubscribersMock.callArgs = append(mmGetSubscribers.GetSubscribersMock.callArgs, mm_params)
-	mmGetSubscribers.GetSubscribersMock.mutex.Unlock()
+	mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.mutex.Lock()
+	mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.callArgs = append(mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.callArgs, mm_params)
+	mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.mutex.Unlock()
 
-	for _, e := range mmGetSubscribers.GetSubscribersMock.expectations {
+	for _, e := range mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.expectations {
 		if minimock.Equal(e.params, mm_params) {
 			mm_atomic.AddUint64(&e.Counter, 1)
 			return e.results.sa1, e.results.err
 		}
 	}
 
-	if mmGetSubscribers.GetSubscribersMock.defaultExpectation != nil {
-		mm_atomic.AddUint64(&mmGetSubscribers.GetSubscribersMock.defaultExpectation.Counter, 1)
-		mm_want := mmGetSubscribers.GetSubscribersMock.defaultExpectation.params
-		mm_got := RepositoryMockGetSubscribersParams{ctx, i1}
+	if mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.defaultExpectation != nil {
+		mm_atomic.AddUint64(&mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.defaultExpectation.Counter, 1)
+		mm_want := mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.defaultExpectation.params
+		mm_got := RepositoryMockGetSubscribersForSubscriptionParams{ctx, i1}
 		if mm_want != nil && !minimock.Equal(*mm_want, mm_got) {
-			mmGetSubscribers.t.Errorf("RepositoryMock.GetSubscribers got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
+			mmGetSubscribersForSubscription.t.Errorf("RepositoryMock.GetSubscribersForSubscription got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
 		}
 
-		mm_results := mmGetSubscribers.GetSubscribersMock.defaultExpectation.results
+		mm_results := mmGetSubscribersForSubscription.GetSubscribersForSubscriptionMock.defaultExpectation.results
 		if mm_results == nil {
-			mmGetSubscribers.t.Fatal("No results are set for the RepositoryMock.GetSubscribers")
+			mmGetSubscribersForSubscription.t.Fatal("No results are set for the RepositoryMock.GetSubscribersForSubscription")
 		}
 		return (*mm_results).sa1, (*mm_results).err
 	}
-	if mmGetSubscribers.funcGetSubscribers != nil {
-		return mmGetSubscribers.funcGetSubscribers(ctx, i1)
+	if mmGetSubscribersForSubscription.funcGetSubscribersForSubscription != nil {
+		return mmGetSubscribersForSubscription.funcGetSubscribersForSubscription(ctx, i1)
 	}
-	mmGetSubscribers.t.Fatalf("Unexpected call to RepositoryMock.GetSubscribers. %v %v", ctx, i1)
+	mmGetSubscribersForSubscription.t.Fatalf("Unexpected call to RepositoryMock.GetSubscribersForSubscription. %v %v", ctx, i1)
 	return
 }
 
-// GetSubscribersAfterCounter returns a count of finished RepositoryMock.GetSubscribers invocations
-func (mmGetSubscribers *RepositoryMock) GetSubscribersAfterCounter() uint64 {
-	return mm_atomic.LoadUint64(&mmGetSubscribers.afterGetSubscribersCounter)
+// GetSubscribersForSubscriptionAfterCounter returns a count of finished RepositoryMock.GetSubscribersForSubscription invocations
+func (mmGetSubscribersForSubscription *RepositoryMock) GetSubscribersForSubscriptionAfterCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetSubscribersForSubscription.afterGetSubscribersForSubscriptionCounter)
 }
 
-// GetSubscribersBeforeCounter returns a count of RepositoryMock.GetSubscribers invocations
-func (mmGetSubscribers *RepositoryMock) GetSubscribersBeforeCounter() uint64 {
-	return mm_atomic.LoadUint64(&mmGetSubscribers.beforeGetSubscribersCounter)
+// GetSubscribersForSubscriptionBeforeCounter returns a count of RepositoryMock.GetSubscribersForSubscription invocations
+func (mmGetSubscribersForSubscription *RepositoryMock) GetSubscribersForSubscriptionBeforeCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetSubscribersForSubscription.beforeGetSubscribersForSubscriptionCounter)
 }
 
-// Calls returns a list of arguments used in each call to RepositoryMock.GetSubscribers.
+// Calls returns a list of arguments used in each call to RepositoryMock.GetSubscribersForSubscription.
 // The list is in the same order as the calls were made (i.e. recent calls have a higher index)
-func (mmGetSubscribers *mRepositoryMockGetSubscribers) Calls() []*RepositoryMockGetSubscribersParams {
-	mmGetSubscribers.mutex.RLock()
+func (mmGetSubscribersForSubscription *mRepositoryMockGetSubscribersForSubscription) Calls() []*RepositoryMockGetSubscribersForSubscriptionParams {
+	mmGetSubscribersForSubscription.mutex.RLock()
 
-	argCopy := make([]*RepositoryMockGetSubscribersParams, len(mmGetSubscribers.callArgs))
-	copy(argCopy, mmGetSubscribers.callArgs)
+	argCopy := make([]*RepositoryMockGetSubscribersForSubscriptionParams, len(mmGetSubscribersForSubscription.callArgs))
+	copy(argCopy, mmGetSubscribersForSubscription.callArgs)
 
-	mmGetSubscribers.mutex.RUnlock()
+	mmGetSubscribersForSubscription.mutex.RUnlock()
 
 	return argCopy
 }
 
-// MinimockGetSubscribersDone returns true if the count of the GetSubscribers invocations corresponds
+// MinimockGetSubscribersForSubscriptionDone returns true if the count of the GetSubscribersForSubscription invocations corresponds
 // the number of defined expectations
-func (m *RepositoryMock) MinimockGetSubscribersDone() bool {
-	for _, e := range m.GetSubscribersMock.expectations {
+func (m *RepositoryMock) MinimockGetSubscribersForSubscriptionDone() bool {
+	for _, e := range m.GetSubscribersForSubscriptionMock.expectations {
 		if mm_atomic.LoadUint64(&e.Counter) < 1 {
 			return false
 		}
 	}
 
 	// if default expectation was set then invocations count should be greater than zero
-	if m.GetSubscribersMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersCounter) < 1 {
+	if m.GetSubscribersForSubscriptionMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersForSubscriptionCounter) < 1 {
 		return false
 	}
 	// if func was set then invocations count should be greater than zero
-	if m.funcGetSubscribers != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersCounter) < 1 {
+	if m.funcGetSubscribersForSubscription != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersForSubscriptionCounter) < 1 {
 		return false
 	}
 	return true
 }
 
-// MinimockGetSubscribersInspect logs each unmet expectation
-func (m *RepositoryMock) MinimockGetSubscribersInspect() {
-	for _, e := range m.GetSubscribersMock.expectations {
+// MinimockGetSubscribersForSubscriptionInspect logs each unmet expectation
+func (m *RepositoryMock) MinimockGetSubscribersForSubscriptionInspect() {
+	for _, e := range m.GetSubscribersForSubscriptionMock.expectations {
 		if mm_atomic.LoadUint64(&e.Counter) < 1 {
-			m.t.Errorf("Expected call to RepositoryMock.GetSubscribers with params: %#v", *e.params)
+			m.t.Errorf("Expected call to RepositoryMock.GetSubscribersForSubscription with params: %#v", *e.params)
 		}
 	}
 
 	// if default expectation was set then invocations count should be greater than zero
-	if m.GetSubscribersMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersCounter) < 1 {
-		if m.GetSubscribersMock.defaultExpectation.params == nil {
-			m.t.Error("Expected call to RepositoryMock.GetSubscribers")
+	if m.GetSubscribersForSubscriptionMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersForSubscriptionCounter) < 1 {
+		if m.GetSubscribersForSubscriptionMock.defaultExpectation.params == nil {
+			m.t.Error("Expected call to RepositoryMock.GetSubscribersForSubscription")
 		} else {
-			m.t.Errorf("Expected call to RepositoryMock.GetSubscribers with params: %#v", *m.GetSubscribersMock.defaultExpectation.params)
+			m.t.Errorf("Expected call to RepositoryMock.GetSubscribersForSubscription with params: %#v", *m.GetSubscribersForSubscriptionMock.defaultExpectation.params)
 		}
 	}
 	// if func was set then invocations count should be greater than zero
-	if m.funcGetSubscribers != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersCounter) < 1 {
-		m.t.Error("Expected call to RepositoryMock.GetSubscribers")
+	if m.funcGetSubscribersForSubscription != nil && mm_atomic.LoadUint64(&m.afterGetSubscribersForSubscriptionCounter) < 1 {
+		m.t.Error("Expected call to RepositoryMock.GetSubscribersForSubscription")
 	}
 }
 
-type mRepositoryMockGetSubscriptions struct {
+type mRepositoryMockGetSubscriptionsForUser struct {
 	mock               *RepositoryMock
-	defaultExpectation *RepositoryMockGetSubscriptionsExpectation
-	expectations       []*RepositoryMockGetSubscriptionsExpectation
+	defaultExpectation *RepositoryMockGetSubscriptionsForUserExpectation
+	expectations       []*RepositoryMockGetSubscriptionsForUserExpectation
 
-	callArgs []*RepositoryMockGetSubscriptionsParams
+	callArgs []*RepositoryMockGetSubscriptionsForUserParams
 	mutex    sync.RWMutex
 }
 
-// RepositoryMockGetSubscriptionsExpectation specifies expectation struct of the Repository.GetSubscriptions
-type RepositoryMockGetSubscriptionsExpectation struct {
+// RepositoryMockGetSubscriptionsForUserExpectation specifies expectation struct of the Repository.GetSubscriptionsForUser
+type RepositoryMockGetSubscriptionsForUserExpectation struct {
 	mock    *RepositoryMock
-	params  *RepositoryMockGetSubscriptionsParams
-	results *RepositoryMockGetSubscriptionsResults
+	params  *RepositoryMockGetSubscriptionsForUserParams
+	results *RepositoryMockGetSubscriptionsForUserResults
 	Counter uint64
 }
 
-// RepositoryMockGetSubscriptionsParams contains parameters of the Repository.GetSubscriptions
-type RepositoryMockGetSubscriptionsParams struct {
+// RepositoryMockGetSubscriptionsForUserParams contains parameters of the Repository.GetSubscriptionsForUser
+type RepositoryMockGetSubscriptionsForUserParams struct {
 	ctx context.Context
 	i1  int
 }
 
-// RepositoryMockGetSubscriptionsResults contains results of the Repository.GetSubscriptions
-type RepositoryMockGetSubscriptionsResults struct {
+// RepositoryMockGetSubscriptionsForUserResults contains results of the Repository.GetSubscriptionsForUser
+type RepositoryMockGetSubscriptionsForUserResults struct {
 	sa1 []models.Subscription
 	err error
 }
 
-// Expect sets up expected params for Repository.GetSubscriptions
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) Expect(ctx context.Context, i1 int) *mRepositoryMockGetSubscriptions {
-	if mmGetSubscriptions.mock.funcGetSubscriptions != nil {
-		mmGetSubscriptions.mock.t.Fatalf("RepositoryMock.GetSubscriptions mock is already set by Set")
+// Expect sets up expected params for Repository.GetSubscriptionsForUser
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) Expect(ctx context.Context, i1 int) *mRepositoryMockGetSubscriptionsForUser {
+	if mmGetSubscriptionsForUser.mock.funcGetSubscriptionsForUser != nil {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("RepositoryMock.GetSubscriptionsForUser mock is already set by Set")
 	}
 
-	if mmGetSubscriptions.defaultExpectation == nil {
-		mmGetSubscriptions.defaultExpectation = &RepositoryMockGetSubscriptionsExpectation{}
+	if mmGetSubscriptionsForUser.defaultExpectation == nil {
+		mmGetSubscriptionsForUser.defaultExpectation = &RepositoryMockGetSubscriptionsForUserExpectation{}
 	}
 
-	mmGetSubscriptions.defaultExpectation.params = &RepositoryMockGetSubscriptionsParams{ctx, i1}
-	for _, e := range mmGetSubscriptions.expectations {
-		if minimock.Equal(e.params, mmGetSubscriptions.defaultExpectation.params) {
-			mmGetSubscriptions.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetSubscriptions.defaultExpectation.params)
+	mmGetSubscriptionsForUser.defaultExpectation.params = &RepositoryMockGetSubscriptionsForUserParams{ctx, i1}
+	for _, e := range mmGetSubscriptionsForUser.expectations {
+		if minimock.Equal(e.params, mmGetSubscriptionsForUser.defaultExpectation.params) {
+			mmGetSubscriptionsForUser.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetSubscriptionsForUser.defaultExpectation.params)
 		}
 	}
 
-	return mmGetSubscriptions
+	return mmGetSubscriptionsForUser
 }
 
-// Inspect accepts an inspector function that has same arguments as the Repository.GetSubscriptions
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) Inspect(f func(ctx context.Context, i1 int)) *mRepositoryMockGetSubscriptions {
-	if mmGetSubscriptions.mock.inspectFuncGetSubscriptions != nil {
-		mmGetSubscriptions.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetSubscriptions")
+// Inspect accepts an inspector function that has same arguments as the Repository.GetSubscriptionsForUser
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) Inspect(f func(ctx context.Context, i1 int)) *mRepositoryMockGetSubscriptionsForUser {
+	if mmGetSubscriptionsForUser.mock.inspectFuncGetSubscriptionsForUser != nil {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetSubscriptionsForUser")
 	}
 
-	mmGetSubscriptions.mock.inspectFuncGetSubscriptions = f
+	mmGetSubscriptionsForUser.mock.inspectFuncGetSubscriptionsForUser = f
 
-	return mmGetSubscriptions
+	return mmGetSubscriptionsForUser
 }
 
-// Return sets up results that will be returned by Repository.GetSubscriptions
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) Return(sa1 []models.Subscription, err error) *RepositoryMock {
-	if mmGetSubscriptions.mock.funcGetSubscriptions != nil {
-		mmGetSubscriptions.mock.t.Fatalf("RepositoryMock.GetSubscriptions mock is already set by Set")
+// Return sets up results that will be returned by Repository.GetSubscriptionsForUser
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) Return(sa1 []models.Subscription, err error) *RepositoryMock {
+	if mmGetSubscriptionsForUser.mock.funcGetSubscriptionsForUser != nil {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("RepositoryMock.GetSubscriptionsForUser mock is already set by Set")
 	}
 
-	if mmGetSubscriptions.defaultExpectation == nil {
-		mmGetSubscriptions.defaultExpectation = &RepositoryMockGetSubscriptionsExpectation{mock: mmGetSubscriptions.mock}
+	if mmGetSubscriptionsForUser.defaultExpectation == nil {
+		mmGetSubscriptionsForUser.defaultExpectation = &RepositoryMockGetSubscriptionsForUserExpectation{mock: mmGetSubscriptionsForUser.mock}
 	}
-	mmGetSubscriptions.defaultExpectation.results = &RepositoryMockGetSubscriptionsResults{sa1, err}
-	return mmGetSubscriptions.mock
+	mmGetSubscriptionsForUser.defaultExpectation.results = &RepositoryMockGetSubscriptionsForUserResults{sa1, err}
+	return mmGetSubscriptionsForUser.mock
 }
 
-//Set uses given function f to mock the Repository.GetSubscriptions method
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) Set(f func(ctx context.Context, i1 int) (sa1 []models.Subscription, err error)) *RepositoryMock {
-	if mmGetSubscriptions.defaultExpectation != nil {
-		mmGetSubscriptions.mock.t.Fatalf("Default expectation is already set for the Repository.GetSubscriptions method")
+//Set uses given function f to mock the Repository.GetSubscriptionsForUser method
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) Set(f func(ctx context.Context, i1 int) (sa1 []models.Subscription, err error)) *RepositoryMock {
+	if mmGetSubscriptionsForUser.defaultExpectation != nil {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("Default expectation is already set for the Repository.GetSubscriptionsForUser method")
 	}
 
-	if len(mmGetSubscriptions.expectations) > 0 {
-		mmGetSubscriptions.mock.t.Fatalf("Some expectations are already set for the Repository.GetSubscriptions method")
+	if len(mmGetSubscriptionsForUser.expectations) > 0 {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("Some expectations are already set for the Repository.GetSubscriptionsForUser method")
 	}
 
-	mmGetSubscriptions.mock.funcGetSubscriptions = f
-	return mmGetSubscriptions.mock
+	mmGetSubscriptionsForUser.mock.funcGetSubscriptionsForUser = f
+	return mmGetSubscriptionsForUser.mock
 }
 
-// When sets expectation for the Repository.GetSubscriptions which will trigger the result defined by the following
+// When sets expectation for the Repository.GetSubscriptionsForUser which will trigger the result defined by the following
 // Then helper
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) When(ctx context.Context, i1 int) *RepositoryMockGetSubscriptionsExpectation {
-	if mmGetSubscriptions.mock.funcGetSubscriptions != nil {
-		mmGetSubscriptions.mock.t.Fatalf("RepositoryMock.GetSubscriptions mock is already set by Set")
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) When(ctx context.Context, i1 int) *RepositoryMockGetSubscriptionsForUserExpectation {
+	if mmGetSubscriptionsForUser.mock.funcGetSubscriptionsForUser != nil {
+		mmGetSubscriptionsForUser.mock.t.Fatalf("RepositoryMock.GetSubscriptionsForUser mock is already set by Set")
 	}
 
-	expectation := &RepositoryMockGetSubscriptionsExpectation{
-		mock:   mmGetSubscriptions.mock,
-		params: &RepositoryMockGetSubscriptionsParams{ctx, i1},
+	expectation := &RepositoryMockGetSubscriptionsForUserExpectation{
+		mock:   mmGetSubscriptionsForUser.mock,
+		params: &RepositoryMockGetSubscriptionsForUserParams{ctx, i1},
 	}
-	mmGetSubscriptions.expectations = append(mmGetSubscriptions.expectations, expectation)
+	mmGetSubscriptionsForUser.expectations = append(mmGetSubscriptionsForUser.expectations, expectation)
 	return expectation
 }
 
-// Then sets up Repository.GetSubscriptions return parameters for the expectation previously defined by the When method
-func (e *RepositoryMockGetSubscriptionsExpectation) Then(sa1 []models.Subscription, err error) *RepositoryMock {
-	e.results = &RepositoryMockGetSubscriptionsResults{sa1, err}
+// Then sets up Repository.GetSubscriptionsForUser return parameters for the expectation previously defined by the When method
+func (e *RepositoryMockGetSubscriptionsForUserExpectation) Then(sa1 []models.Subscription, err error) *RepositoryMock {
+	e.results = &RepositoryMockGetSubscriptionsForUserResults{sa1, err}
 	return e.mock
 }
 
-// GetSubscriptions implements Repository
-func (mmGetSubscriptions *RepositoryMock) GetSubscriptions(ctx context.Context, i1 int) (sa1 []models.Subscription, err error) {
-	mm_atomic.AddUint64(&mmGetSubscriptions.beforeGetSubscriptionsCounter, 1)
-	defer mm_atomic.AddUint64(&mmGetSubscriptions.afterGetSubscriptionsCounter, 1)
+// GetSubscriptionsForUser implements Repository
+func (mmGetSubscriptionsForUser *RepositoryMock) GetSubscriptionsForUser(ctx context.Context, i1 int) (sa1 []models.Subscription, err error) {
+	mm_atomic.AddUint64(&mmGetSubscriptionsForUser.beforeGetSubscriptionsForUserCounter, 1)
+	defer mm_atomic.AddUint64(&mmGetSubscriptionsForUser.afterGetSubscriptionsForUserCounter, 1)
 
-	if mmGetSubscriptions.inspectFuncGetSubscriptions != nil {
-		mmGetSubscriptions.inspectFuncGetSubscriptions(ctx, i1)
+	if mmGetSubscriptionsForUser.inspectFuncGetSubscriptionsForUser != nil {
+		mmGetSubscriptionsForUser.inspectFuncGetSubscriptionsForUser(ctx, i1)
 	}
 
-	mm_params := &RepositoryMockGetSubscriptionsParams{ctx, i1}
+	mm_params := &RepositoryMockGetSubscriptionsForUserParams{ctx, i1}
 
 	// Record call args
-	mmGetSubscriptions.GetSubscriptionsMock.mutex.Lock()
-	mmGetSubscriptions.GetSubscriptionsMock.callArgs = append(mmGetSubscriptions.GetSubscriptionsMock.callArgs, mm_params)
-	mmGetSubscriptions.GetSubscriptionsMock.mutex.Unlock()
+	mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.mutex.Lock()
+	mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.callArgs = append(mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.callArgs, mm_params)
+	mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.mutex.Unlock()
 
-	for _, e := range mmGetSubscriptions.GetSubscriptionsMock.expectations {
+	for _, e := range mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.expectations {
 		if minimock.Equal(e.params, mm_params) {
 			mm_atomic.AddUint64(&e.Counter, 1)
 			return e.results.sa1, e.results.err
 		}
 	}
 
-	if mmGetSubscriptions.GetSubscriptionsMock.defaultExpectation != nil {
-		mm_atomic.AddUint64(&mmGetSubscriptions.GetSubscriptionsMock.defaultExpectation.Counter, 1)
-		mm_want := mmGetSubscriptions.GetSubscriptionsMock.defaultExpectation.params
-		mm_got := RepositoryMockGetSubscriptionsParams{ctx, i1}
+	if mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.defaultExpectation != nil {
+		mm_atomic.AddUint64(&mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.defaultExpectation.Counter, 1)
+		mm_want := mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.defaultExpectation.params
+		mm_got := RepositoryMockGetSubscriptionsForUserParams{ctx, i1}
 		if mm_want != nil && !minimock.Equal(*mm_want, mm_got) {
-			mmGetSubscriptions.t.Errorf("RepositoryMock.GetSubscriptions got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
+			mmGetSubscriptionsForUser.t.Errorf("RepositoryMock.GetSubscriptionsForUser got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
 		}
 
-		mm_results := mmGetSubscriptions.GetSubscriptionsMock.defaultExpectation.results
+		mm_results := mmGetSubscriptionsForUser.GetSubscriptionsForUserMock.defaultExpectation.results
 		if mm_results == nil {
-			mmGetSubscriptions.t.Fatal("No results are set for the RepositoryMock.GetSubscriptions")
+			mmGetSubscriptionsForUser.t.Fatal("No results are set for the RepositoryMock.GetSubscriptionsForUser")
 		}
 		return (*mm_results).sa1, (*mm_results).err
 	}
-	if mmGetSubscriptions.funcGetSubscriptions != nil {
-		return mmGetSubscriptions.funcGetSubscriptions(ctx, i1)
+	if mmGetSubscriptionsForUser.funcGetSubscriptionsForUser != nil {
+		return mmGetSubscriptionsForUser.funcGetSubscriptionsForUser(ctx, i1)
 	}
-	mmGetSubscriptions.t.Fatalf("Unexpected call to RepositoryMock.GetSubscriptions. %v %v", ctx, i1)
+	mmGetSubscriptionsForUser.t.Fatalf("Unexpected call to RepositoryMock.GetSubscriptionsForUser. %v %v", ctx, i1)
 	return
 }
 
-// GetSubscriptionsAfterCounter returns a count of finished RepositoryMock.GetSubscriptions invocations
-func (mmGetSubscriptions *RepositoryMock) GetSubscriptionsAfterCounter() uint64 {
-	return mm_atomic.LoadUint64(&mmGetSubscriptions.afterGetSubscriptionsCounter)
+// GetSubscriptionsForUserAfterCounter returns a count of finished RepositoryMock.GetSubscriptionsForUser invocations
+func (mmGetSubscriptionsForUser *RepositoryMock) GetSubscriptionsForUserAfterCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetSubscriptionsForUser.afterGetSubscriptionsForUserCounter)
 }
 
-// GetSubscriptionsBeforeCounter returns a count of RepositoryMock.GetSubscriptions invocations
-func (mmGetSubscriptions *RepositoryMock) GetSubscriptionsBeforeCounter() uint64 {
-	return mm_atomic.LoadUint64(&mmGetSubscriptions.beforeGetSubscriptionsCounter)
+// GetSubscriptionsForUserBeforeCounter returns a count of RepositoryMock.GetSubscriptionsForUser invocations
+func (mmGetSubscriptionsForUser *RepositoryMock) GetSubscriptionsForUserBeforeCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetSubscriptionsForUser.beforeGetSubscriptionsForUserCounter)
 }
 
-// Calls returns a list of arguments used in each call to RepositoryMock.GetSubscriptions.
+// Calls returns a list of arguments used in each call to RepositoryMock.GetSubscriptionsForUser.
 // The list is in the same order as the calls were made (i.e. recent calls have a higher index)
-func (mmGetSubscriptions *mRepositoryMockGetSubscriptions) Calls() []*RepositoryMockGetSubscriptionsParams {
-	mmGetSubscriptions.mutex.RLock()
+func (mmGetSubscriptionsForUser *mRepositoryMockGetSubscriptionsForUser) Calls() []*RepositoryMockGetSubscriptionsForUserParams {
+	mmGetSubscriptionsForUser.mutex.RLock()
 
-	argCopy := make([]*RepositoryMockGetSubscriptionsParams, len(mmGetSubscriptions.callArgs))
-	copy(argCopy, mmGetSubscriptions.callArgs)
+	argCopy := make([]*RepositoryMockGetSubscriptionsForUserParams, len(mmGetSubscriptionsForUser.callArgs))
+	copy(argCopy, mmGetSubscriptionsForUser.callArgs)
 
-	mmGetSubscriptions.mutex.RUnlock()
+	mmGetSubscriptionsForUser.mutex.RUnlock()
 
 	return argCopy
 }
 
-// MinimockGetSubscriptionsDone returns true if the count of the GetSubscriptions invocations corresponds
+// MinimockGetSubscriptionsForUserDone returns true if the count of the GetSubscriptionsForUser invocations corresponds
 // the number of defined expectations
-func (m *RepositoryMock) MinimockGetSubscriptionsDone() bool {
-	for _, e := range m.GetSubscriptionsMock.expectations {
+func (m *RepositoryMock) MinimockGetSubscriptionsForUserDone() bool {
+	for _, e := range m.GetSubscriptionsForUserMock.expectations {
 		if mm_atomic.LoadUint64(&e.Counter) < 1 {
 			return false
 		}
 	}
 
 	// if default expectation was set then invocations count should be greater than zero
-	if m.GetSubscriptionsMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsCounter) < 1 {
+	if m.GetSubscriptionsForUserMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsForUserCounter) < 1 {
 		return false
 	}
 	// if func was set then invocations count should be greater than zero
-	if m.funcGetSubscriptions != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsCounter) < 1 {
+	if m.funcGetSubscriptionsForUser != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsForUserCounter) < 1 {
 		return false
 	}
 	return true
 }
 
-// MinimockGetSubscriptionsInspect logs each unmet expectation
-func (m *RepositoryMock) MinimockGetSubscriptionsInspect() {
-	for _, e := range m.GetSubscriptionsMock.expectations {
+// MinimockGetSubscriptionsForUserInspect logs each unmet expectation
+func (m *RepositoryMock) MinimockGetSubscriptionsForUserInspect() {
+	for _, e := range m.GetSubscriptionsForUserMock.expectations {
 		if mm_atomic.LoadUint64(&e.Counter) < 1 {
-			m.t.Errorf("Expected call to RepositoryMock.GetSubscriptions with params: %#v", *e.params)
+			m.t.Errorf("Expected call to RepositoryMock.GetSubscriptionsForUser with params: %#v", *e.params)
 		}
 	}
 
 	// if default expectation was set then invocations count should be greater than zero
-	if m.GetSubscriptionsMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsCounter) < 1 {
-		if m.GetSubscriptionsMock.defaultExpectation.params == nil {
-			m.t.Error("Expected call to RepositoryMock.GetSubscriptions")
+	if m.GetSubscriptionsForUserMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsForUserCounter) < 1 {
+		if m.GetSubscriptionsForUserMock.defaultExpectation.params == nil {
+			m.t.Error("Expected call to RepositoryMock.GetSubscriptionsForUser")
 		} else {
-			m.t.Errorf("Expected call to RepositoryMock.GetSubscriptions with params: %#v", *m.GetSubscriptionsMock.defaultExpectation.params)
+			m.t.Errorf("Expected call to RepositoryMock.GetSubscriptionsForUser with params: %#v", *m.GetSubscriptionsForUserMock.defaultExpectation.params)
 		}
 	}
 	// if func was set then invocations count should be greater than zero
-	if m.funcGetSubscriptions != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsCounter) < 1 {
-		m.t.Error("Expected call to RepositoryMock.GetSubscriptions")
+	if m.funcGetSubscriptionsForUser != nil && mm_atomic.LoadUint64(&m.afterGetSubscriptionsForUserCounter) < 1 {
+		m.t.Error("Expected call to RepositoryMock.GetSubscriptionsForUser")
 	}
 }
 
@@ -3202,9 +3202,9 @@ func (m *RepositoryMock) MinimockFinish() {
 
 		m.MinimockDeleteUserInspect()
 
-		m.MinimockGetSubscribersInspect()
+		m.MinimockGetSubscribersForSubscriptionInspect()
 
-		m.MinimockGetSubscriptionsInspect()
+		m.MinimockGetSubscriptionsForUserInspect()
 
 		m.MinimockReadSubscriberInspect()
 
@@ -3246,8 +3246,8 @@ func (m *RepositoryMock) minimockDone() bool {
 		m.MinimockDeleteSubscriberDone() &&
 		m.MinimockDeleteSubscriptionDone() &&
 		m.MinimockDeleteUserDone() &&
-		m.MinimockGetSubscribersDone() &&
-		m.MinimockGetSubscriptionsDone() &&
+		m.MinimockGetSubscribersForSubscriptionDone() &&
+		m.MinimockGetSubscriptionsForUserDone() &&
 		m.MinimockReadSubscriberDone() &&
 		m.MinimockReadSubscriptionDone() &&
 		m.MinimockReadUserDone() &&

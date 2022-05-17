@@ -42,11 +42,11 @@ func TestGetSubscribers(t *testing.T) {
 	}
 
 	mockRepo := NewRepositoryMock(mc)
-	mockRepo.GetSubscribersMock.Return(testData, nil)
+	mockRepo.GetSubscribersForSubscriptionMock.Return(testData, nil)
 	svc := New(mockRepo)
 
 	ctx := context.Background()
-	subscribers, err := svc.GetSubscribers(ctx, &api.ID{Id: int64(testSubscriptionId)})
+	subscribers, err := svc.GetSubscribersForSubscription(ctx, &api.ID{Id: int64(testSubscriptionId)})
 
 	assert.Nil(t, err)
 	for i, subscriber := range subscribers.Subscribers {
@@ -66,11 +66,11 @@ func TestGetSubscribersNotFound(t *testing.T) {
 	defer mc.Finish()
 
 	mockRepo := NewRepositoryMock(mc)
-	mockRepo.GetSubscribersMock.Return([]models.Subscriber{}, repository.ErrNotFound)
+	mockRepo.GetSubscribersForSubscriptionMock.Return([]models.Subscriber{}, repository.ErrNotFound)
 	svc := New(mockRepo)
 
 	ctx := context.Background()
-	_, err := svc.GetSubscribers(ctx, &api.ID{Id: 1})
+	_, err := svc.GetSubscribersForSubscription(ctx, &api.ID{Id: 1})
 
 	assert.Equal(t, err, status.Error(codes.NotFound, repository.ErrNotFound.Error()))
 }

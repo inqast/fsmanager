@@ -44,11 +44,11 @@ func TestGetSubscriptions(t *testing.T) {
 	}
 
 	mockRepo := NewRepositoryMock(mc)
-	mockRepo.GetSubscriptionsMock.Return(testData, nil)
+	mockRepo.GetSubscriptionsForUserMock.Return(testData, nil)
 	svc := New(mockRepo)
 
 	ctx := context.Background()
-	subscriptions, err := svc.GetSubscriptions(ctx, &api.ID{Id: int64(testUserID)})
+	subscriptions, err := svc.GetSubscriptionsForUser(ctx, &api.ID{Id: int64(testUserID)})
 
 	assert.Nil(t, err)
 	for i, subscription := range subscriptions.Subscriptions {
@@ -69,11 +69,11 @@ func TestGetSubscriptionsNotFound(t *testing.T) {
 	defer mc.Finish()
 
 	mockRepo := NewRepositoryMock(mc)
-	mockRepo.GetSubscriptionsMock.Return([]models.Subscription{}, repository.ErrNotFound)
+	mockRepo.GetSubscriptionsForUserMock.Return([]models.Subscription{}, repository.ErrNotFound)
 	svc := New(mockRepo)
 
 	ctx := context.Background()
-	_, err := svc.GetSubscriptions(ctx, &api.ID{Id: 1})
+	_, err := svc.GetSubscriptionsForUser(ctx, &api.ID{Id: 1})
 
 	assert.Equal(t, err, status.Error(codes.NotFound, repository.ErrNotFound.Error()))
 }
