@@ -6,7 +6,7 @@ import (
 	"github.com/inqast/fsmanager/internal/models"
 )
 
-func (r *repository) GetSubscriptions(ctx context.Context, userID int) (subscriptions []models.Subscription, err error) {
+func (r *repository) GetSubscriptionsForUser(ctx context.Context, userID int) (subscriptions []models.Subscription, err error) {
 	const query = `
 		select subscriptions.id,
 			subscriptions.owner_id,

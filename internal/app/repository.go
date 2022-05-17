@@ -22,6 +22,6 @@ type Repository interface {
 	UpdateSubscriber(context.Context, models.Subscriber) error
 	DeleteSubscriber(context.Context, int) error
 
-	GetSubscribers(context.Context, int) ([]models.Subscriber, error)
-	GetSubscriptions(context.Context, int) ([]models.Subscription, error)
+	GetSubscribersForSubscription(context.Context, int) ([]models.Subscriber, error)
+	GetSubscriptionsForUser(context.Context, int) ([]models.Subscription, error)
 }

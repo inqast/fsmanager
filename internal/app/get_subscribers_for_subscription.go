@@ -11,9 +11,9 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (t *tserver) GetSubscribers(ctx context.Context, req *api.ID) (*api.GetSubscribersResponse, error) {
+func (t *tserver) GetSubscribersForSubscription(ctx context.Context, req *api.ID) (*api.GetSubscribersResponse, error) {
 
-	subscriptions, err := t.repo.GetSubscribers(ctx, int(req.Id))
+	subscriptions, err := t.repo.GetSubscribersForSubscription(ctx, int(req.Id))
 	if errors.Is(err, repository.ErrNotFound) {
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
