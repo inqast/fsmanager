@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.6.1
-// source: api/api.proto
+// source: api.proto
 
 package api
 
@@ -27,16 +27,16 @@ type FamilySubClient interface {
 	ReadUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*User, error)
 	UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetSubscriptionsForUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error)
 	CreateSubscription(ctx context.Context, in *Subscription, opts ...grpc.CallOption) (*ID, error)
 	ReadSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Subscription, error)
 	UpdateSubscription(ctx context.Context, in *Subscription, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetSubscribersForSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscribersResponse, error)
 	CreateSubscriber(ctx context.Context, in *Subscriber, opts ...grpc.CallOption) (*ID, error)
 	ReadSubscriber(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Subscriber, error)
 	UpdateSubscriber(ctx context.Context, in *Subscriber, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteSubscriber(ctx context.Context, in *ID, opts ...grpc.CallOption) (*empty.Empty, error)
-	GetSubscribers(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscribersResponse, error)
-	GetSubscriptions(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error)
 }
 
 type familySubClient struct {
@@ -83,6 +83,15 @@ func (c *familySubClient) DeleteUser(ctx context.Context, in *ID, opts ...grpc.C
 	return out, nil
 }
 
+func (c *familySubClient) GetSubscriptionsForUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error) {
+	out := new(GetSubscriptionsResponse)
+	err := c.cc.Invoke(ctx, "/api.FamilySub/GetSubscriptionsForUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *familySubClient) CreateSubscription(ctx context.Context, in *Subscription, opts ...grpc.CallOption) (*ID, error) {
 	out := new(ID)
 	err := c.cc.Invoke(ctx, "/api.FamilySub/CreateSubscription", in, out, opts...)
@@ -113,6 +122,15 @@ func (c *familySubClient) UpdateSubscription(ctx context.Context, in *Subscripti
 func (c *familySubClient) DeleteSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/api.FamilySub/DeleteSubscription", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *familySubClient) GetSubscribersForSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscribersResponse, error) {
+	out := new(GetSubscribersResponse)
+	err := c.cc.Invoke(ctx, "/api.FamilySub/GetSubscribersForSubscription", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -155,24 +173,6 @@ func (c *familySubClient) DeleteSubscriber(ctx context.Context, in *ID, opts ...
 	return out, nil
 }
 
-func (c *familySubClient) GetSubscribers(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscribersResponse, error) {
-	out := new(GetSubscribersResponse)
-	err := c.cc.Invoke(ctx, "/api.FamilySub/GetSubscribers", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *familySubClient) GetSubscriptions(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error) {
-	out := new(GetSubscriptionsResponse)
-	err := c.cc.Invoke(ctx, "/api.FamilySub/GetSubscriptions", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // FamilySubServer is the server API for FamilySub service.
 // All implementations must embed UnimplementedFamilySubServer
 // for forward compatibility
@@ -181,16 +181,16 @@ type FamilySubServer interface {
 	ReadUser(context.Context, *ID) (*User, error)
 	UpdateUser(context.Context, *User) (*empty.Empty, error)
 	DeleteUser(context.Context, *ID) (*empty.Empty, error)
+	GetSubscriptionsForUser(context.Context, *ID) (*GetSubscriptionsResponse, error)
 	CreateSubscription(context.Context, *Subscription) (*ID, error)
 	ReadSubscription(context.Context, *ID) (*Subscription, error)
 	UpdateSubscription(context.Context, *Subscription) (*empty.Empty, error)
 	DeleteSubscription(context.Context, *ID) (*empty.Empty, error)
+	GetSubscribersForSubscription(context.Context, *ID) (*GetSubscribersResponse, error)
 	CreateSubscriber(context.Context, *Subscriber) (*ID, error)
 	ReadSubscriber(context.Context, *ID) (*Subscriber, error)
 	UpdateSubscriber(context.Context, *Subscriber) (*empty.Empty, error)
 	DeleteSubscriber(context.Context, *ID) (*empty.Empty, error)
-	GetSubscribers(context.Context, *ID) (*GetSubscribersResponse, error)
-	GetSubscriptions(context.Context, *ID) (*GetSubscriptionsResponse, error)
 	mustEmbedUnimplementedFamilySubServer()
 }
 
@@ -210,6 +210,9 @@ func (UnimplementedFamilySubServer) UpdateUser(context.Context, *User) (*empty.E
 func (UnimplementedFamilySubServer) DeleteUser(context.Context, *ID) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
+func (UnimplementedFamilySubServer) GetSubscriptionsForUser(context.Context, *ID) (*GetSubscriptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptionsForUser not implemented")
+}
 func (UnimplementedFamilySubServer) CreateSubscription(context.Context, *Subscription) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSubscription not implemented")
 }
@@ -222,6 +225,9 @@ func (UnimplementedFamilySubServer) UpdateSubscription(context.Context, *Subscri
 func (UnimplementedFamilySubServer) DeleteSubscription(context.Context, *ID) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSubscription not implemented")
 }
+func (UnimplementedFamilySubServer) GetSubscribersForSubscription(context.Context, *ID) (*GetSubscribersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubscribersForSubscription not implemented")
+}
 func (UnimplementedFamilySubServer) CreateSubscriber(context.Context, *Subscriber) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSubscriber not implemented")
 }
@@ -233,12 +239,6 @@ func (UnimplementedFamilySubServer) UpdateSubscriber(context.Context, *Subscribe
 }
 func (UnimplementedFamilySubServer) DeleteSubscriber(context.Context, *ID) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSubscriber not implemented")
-}
-func (UnimplementedFamilySubServer) GetSubscribers(context.Context, *ID) (*GetSubscribersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSubscribers not implemented")
-}
-func (UnimplementedFamilySubServer) GetSubscriptions(context.Context, *ID) (*GetSubscriptionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptions not implemented")
 }
 func (UnimplementedFamilySubServer) mustEmbedUnimplementedFamilySubServer() {}
 
@@ -325,6 +325,24 @@ func _FamilySub_DeleteUser_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FamilySub_GetSubscriptionsForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FamilySubServer).GetSubscriptionsForUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.FamilySub/GetSubscriptionsForUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FamilySubServer).GetSubscriptionsForUser(ctx, req.(*ID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _FamilySub_CreateSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Subscription)
 	if err := dec(in); err != nil {
@@ -393,6 +411,24 @@ func _FamilySub_DeleteSubscription_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FamilySubServer).DeleteSubscription(ctx, req.(*ID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FamilySub_GetSubscribersForSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FamilySubServer).GetSubscribersForSubscription(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.FamilySub/GetSubscribersForSubscription",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FamilySubServer).GetSubscribersForSubscription(ctx, req.(*ID))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -469,42 +505,6 @@ func _FamilySub_DeleteSubscriber_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FamilySub_GetSubscribers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ID)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FamilySubServer).GetSubscribers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.FamilySub/GetSubscribers",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FamilySubServer).GetSubscribers(ctx, req.(*ID))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FamilySub_GetSubscriptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ID)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FamilySubServer).GetSubscriptions(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.FamilySub/GetSubscriptions",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FamilySubServer).GetSubscriptions(ctx, req.(*ID))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // FamilySub_ServiceDesc is the grpc.ServiceDesc for FamilySub service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -529,6 +529,10 @@ var FamilySub_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FamilySub_DeleteUser_Handler,
 		},
 		{
+			MethodName: "GetSubscriptionsForUser",
+			Handler:    _FamilySub_GetSubscriptionsForUser_Handler,
+		},
+		{
 			MethodName: "CreateSubscription",
 			Handler:    _FamilySub_CreateSubscription_Handler,
 		},
@@ -543,6 +547,10 @@ var FamilySub_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSubscription",
 			Handler:    _FamilySub_DeleteSubscription_Handler,
+		},
+		{
+			MethodName: "GetSubscribersForSubscription",
+			Handler:    _FamilySub_GetSubscribersForSubscription_Handler,
 		},
 		{
 			MethodName: "CreateSubscriber",
@@ -560,15 +568,7 @@ var FamilySub_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteSubscriber",
 			Handler:    _FamilySub_DeleteSubscriber_Handler,
 		},
-		{
-			MethodName: "GetSubscribers",
-			Handler:    _FamilySub_GetSubscribers_Handler,
-		},
-		{
-			MethodName: "GetSubscriptions",
-			Handler:    _FamilySub_GetSubscriptions_Handler,
-		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/api.proto",
+	Metadata: "api.proto",
 }
