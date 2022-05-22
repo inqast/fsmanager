@@ -15,20 +15,25 @@ message User {
   int64 id = 1;
   string name = 2;
   string pwd = 3;
-  string createdAt = 4;
+  int64 telegram_id = 4;
+  string createdAt = 5;
 }
 
-message UpdateAwesomeNameRequest {
-  User User = 1;
+message GetUsersByIDsRequest {
+  repeated int64 ids = 1;
+}
+
+message GetUsersByIDsResponse {
+  repeated User users = 1;
 }
 
 message Subscription {
   int64 id = 1;
-  int64 ownerID = 2;
+  int64 chat_id = 2;
   string serviceName = 3;
   int64 capacity = 4;
   int64 priceInCentiUnits = 5;
-  string  paymentDate = 6;
+  int64  paymentDay = 6;
   string createdAt = 7;
 }
 
@@ -75,6 +80,18 @@ service FamilySub {
   rpc GetSubscriptionsForUser(ID) returns (GetSubscriptionsResponse) {
     option (google.api.http) = {
       get: "/v1/user/{id}/subscriptions"
+    };
+  }
+  rpc GetUserByTelegramID(ID) returns (User) {
+    option (google.api.http) = {
+      post: "/v1/users/telegram"
+      body: "*"
+    };
+  }
+  rpc GetUsersByIDs(GetUsersByIDsRequest) returns (GetUsersByIDsResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
     };
   }
 

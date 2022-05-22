@@ -28,6 +28,8 @@ type FamilySubClient interface {
 	UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*empty.Empty, error)
 	DeleteUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*empty.Empty, error)
 	GetSubscriptionsForUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error)
+	GetUserByTelegramID(ctx context.Context, in *ID, opts ...grpc.CallOption) (*User, error)
+	GetUsersByIDs(ctx context.Context, in *GetUsersByIDsRequest, opts ...grpc.CallOption) (*GetUsersByIDsResponse, error)
 	CreateSubscription(ctx context.Context, in *Subscription, opts ...grpc.CallOption) (*ID, error)
 	ReadSubscription(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Subscription, error)
 	UpdateSubscription(ctx context.Context, in *Subscription, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -86,6 +88,24 @@ func (c *familySubClient) DeleteUser(ctx context.Context, in *ID, opts ...grpc.C
 func (c *familySubClient) GetSubscriptionsForUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error) {
 	out := new(GetSubscriptionsResponse)
 	err := c.cc.Invoke(ctx, "/api.FamilySub/GetSubscriptionsForUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *familySubClient) GetUserByTelegramID(ctx context.Context, in *ID, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/api.FamilySub/GetUserByTelegramID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *familySubClient) GetUsersByIDs(ctx context.Context, in *GetUsersByIDsRequest, opts ...grpc.CallOption) (*GetUsersByIDsResponse, error) {
+	out := new(GetUsersByIDsResponse)
+	err := c.cc.Invoke(ctx, "/api.FamilySub/GetUsersByIDs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -182,6 +202,8 @@ type FamilySubServer interface {
 	UpdateUser(context.Context, *User) (*empty.Empty, error)
 	DeleteUser(context.Context, *ID) (*empty.Empty, error)
 	GetSubscriptionsForUser(context.Context, *ID) (*GetSubscriptionsResponse, error)
+	GetUserByTelegramID(context.Context, *ID) (*User, error)
+	GetUsersByIDs(context.Context, *GetUsersByIDsRequest) (*GetUsersByIDsResponse, error)
 	CreateSubscription(context.Context, *Subscription) (*ID, error)
 	ReadSubscription(context.Context, *ID) (*Subscription, error)
 	UpdateSubscription(context.Context, *Subscription) (*empty.Empty, error)
@@ -212,6 +234,12 @@ func (UnimplementedFamilySubServer) DeleteUser(context.Context, *ID) (*empty.Emp
 }
 func (UnimplementedFamilySubServer) GetSubscriptionsForUser(context.Context, *ID) (*GetSubscriptionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptionsForUser not implemented")
+}
+func (UnimplementedFamilySubServer) GetUserByTelegramID(context.Context, *ID) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByTelegramID not implemented")
+}
+func (UnimplementedFamilySubServer) GetUsersByIDs(context.Context, *GetUsersByIDsRequest) (*GetUsersByIDsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsersByIDs not implemented")
 }
 func (UnimplementedFamilySubServer) CreateSubscription(context.Context, *Subscription) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSubscription not implemented")
@@ -339,6 +367,42 @@ func _FamilySub_GetSubscriptionsForUser_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FamilySubServer).GetSubscriptionsForUser(ctx, req.(*ID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FamilySub_GetUserByTelegramID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FamilySubServer).GetUserByTelegramID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.FamilySub/GetUserByTelegramID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FamilySubServer).GetUserByTelegramID(ctx, req.(*ID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FamilySub_GetUsersByIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersByIDsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FamilySubServer).GetUsersByIDs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.FamilySub/GetUsersByIDs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FamilySubServer).GetUsersByIDs(ctx, req.(*GetUsersByIDsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -531,6 +595,14 @@ var FamilySub_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSubscriptionsForUser",
 			Handler:    _FamilySub_GetSubscriptionsForUser_Handler,
+		},
+		{
+			MethodName: "GetUserByTelegramID",
+			Handler:    _FamilySub_GetUserByTelegramID_Handler,
+		},
+		{
+			MethodName: "GetUsersByIDs",
+			Handler:    _FamilySub_GetUsersByIDs_Handler,
 		},
 		{
 			MethodName: "CreateSubscription",

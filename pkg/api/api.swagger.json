@@ -286,7 +286,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "ownerID": {
+                "chatId": {
                   "type": "string",
                   "format": "int64"
                 },
@@ -301,8 +301,9 @@
                   "type": "string",
                   "format": "int64"
                 },
-                "paymentDate": {
-                  "type": "string"
+                "paymentDay": {
+                  "type": "string",
+                  "format": "int64"
                 },
                 "createdAt": {
                   "type": "string"
@@ -475,6 +476,10 @@
                 "pwd": {
                   "type": "string"
                 },
+                "telegramId": {
+                  "type": "string",
+                  "format": "int64"
+                },
                 "createdAt": {
                   "type": "string"
                 }
@@ -517,6 +522,70 @@
           "FamilySub"
         ]
       }
+    },
+    "/v1/users": {
+      "post": {
+        "operationId": "FamilySub_GetUsersByIDs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetUsersByIDsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiGetUsersByIDsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FamilySub"
+        ]
+      }
+    },
+    "/v1/users/telegram": {
+      "post": {
+        "operationId": "FamilySub_GetUserByTelegramID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiID"
+            }
+          }
+        ],
+        "tags": [
+          "FamilySub"
+        ]
+      }
     }
   },
   "definitions": {
@@ -538,6 +607,29 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/apiSubscription"
+          }
+        }
+      }
+    },
+    "apiGetUsersByIDsRequest": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "apiGetUsersByIDsResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiUser"
           }
         }
       }
@@ -584,7 +676,7 @@
           "type": "string",
           "format": "int64"
         },
-        "ownerID": {
+        "chatId": {
           "type": "string",
           "format": "int64"
         },
@@ -599,8 +691,9 @@
           "type": "string",
           "format": "int64"
         },
-        "paymentDate": {
-          "type": "string"
+        "paymentDay": {
+          "type": "string",
+          "format": "int64"
         },
         "createdAt": {
           "type": "string"
@@ -619,6 +712,10 @@
         },
         "pwd": {
           "type": "string"
+        },
+        "telegramId": {
+          "type": "string",
+          "format": "int64"
         },
         "createdAt": {
           "type": "string"
