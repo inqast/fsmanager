@@ -20,11 +20,11 @@ func TestUpdateSubscription(t *testing.T) {
 	defer mc.Finish()
 
 	testId := 1
-	testOwnerID := 1
+	testChatId := 1
 	testServiceName := "testService"
 	testCapacity := 5
 	testPriceInCentiUnits := 500
-	testPaymentDate := sql.NullTime{Time: time.Now()}
+	testPaymentDay := 19
 	testCreatedAt := sql.NullTime{Time: time.Now()}
 
 	mockRepo := NewRepositoryMock(mc)
@@ -34,11 +34,11 @@ func TestUpdateSubscription(t *testing.T) {
 	ctx := context.Background()
 	_, err := svc.UpdateSubscription(ctx, &api.Subscription{
 		Id:                int64(testId),
-		OwnerID:           int64(testOwnerID),
+		ChatId:            int64(testChatId),
 		ServiceName:       testServiceName,
 		Capacity:          int64(testCapacity),
 		PriceInCentiUnits: int64(testPriceInCentiUnits),
-		PaymentDate:       testPaymentDate.Time.Format(time.RFC3339),
+		PaymentDay:        int64(testPaymentDay),
 		CreatedAt:         testCreatedAt.Time.Format(time.RFC3339),
 	})
 
@@ -55,7 +55,7 @@ func TestUpdateSubscriptionNotFound(t *testing.T) {
 	svc := New(mockRepo)
 
 	ctx := context.Background()
-	_, err := svc.UpdateSubscription(ctx, &api.Subscription{Id: 1, PaymentDate: time.Now().Format(time.RFC3339)})
+	_, err := svc.UpdateSubscription(ctx, &api.Subscription{Id: 1, PaymentDay: 19})
 
 	assert.Equal(t, err, status.Error(codes.NotFound, repository.ErrNotFound.Error()))
 }

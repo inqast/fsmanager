@@ -21,21 +21,21 @@ func TestReadSubscription(t *testing.T) {
 	defer mc.Finish()
 
 	testId := 1
-	testOwnerID := 1
+	testChatID := 2
 	testServiceName := "testService"
 	testCapacity := 5
 	testPriceInCentiUnits := 500
-	testPaymentDate := sql.NullTime{Time: time.Now()}
+	testPaymentDay := 19
 	testCreatedAt := sql.NullTime{Time: time.Now()}
 
 	mockRepo := NewRepositoryMock(mc)
 	mockRepo.ReadSubscriptionMock.Return(models.Subscription{
 		ID:                testId,
-		OwnerID:           testOwnerID,
+		ChatID:            testChatID,
 		ServiceName:       testServiceName,
 		Capacity:          testCapacity,
 		PriceInCentiUnits: testPriceInCentiUnits,
-		PaymentDate:       testPaymentDate,
+		PaymentDay:        testPaymentDay,
 		CreatedAt:         testCreatedAt,
 	}, nil)
 	svc := New(mockRepo)
@@ -45,11 +45,11 @@ func TestReadSubscription(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, subscription.Id, int64(testId))
-	assert.Equal(t, subscription.OwnerID, int64(testOwnerID))
+	assert.Equal(t, subscription.ChatId, int64(testChatID))
 	assert.Equal(t, subscription.ServiceName, testServiceName)
 	assert.Equal(t, subscription.Capacity, int64(testCapacity))
 	assert.Equal(t, subscription.PriceInCentiUnits, int64(testPriceInCentiUnits))
-	assert.Equal(t, subscription.PaymentDate, testPaymentDate.Time.Format(time.RFC3339))
+	assert.Equal(t, subscription.PaymentDay, int64(testPaymentDay))
 	assert.Equal(t, subscription.CreatedAt, testCreatedAt.Time.Format(time.RFC3339))
 }
 

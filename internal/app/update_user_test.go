@@ -21,6 +21,7 @@ func TestUpdateUser(t *testing.T) {
 
 	testId := 1
 	testName := "testName"
+	testTelegramId := 12
 	testPwd := "testPwd"
 	testTime := sql.NullTime{Time: time.Now()}
 
@@ -30,10 +31,11 @@ func TestUpdateUser(t *testing.T) {
 
 	ctx := context.Background()
 	_, err := svc.UpdateUser(ctx, &api.User{
-		Id:        int64(testId),
-		Name:      testName,
-		Pwd:       testPwd,
-		CreatedAt: testTime.Time.Format(time.RFC3339),
+		Id:         int64(testId),
+		TelegramId: int64(testTelegramId),
+		Name:       testName,
+		Pwd:        testPwd,
+		CreatedAt:  testTime.Time.Format(time.RFC3339),
 	})
 
 	assert.Nil(t, err)

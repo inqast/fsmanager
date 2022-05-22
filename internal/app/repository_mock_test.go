@@ -66,6 +66,18 @@ type RepositoryMock struct {
 	beforeGetSubscriptionsForUserCounter uint64
 	GetSubscriptionsForUserMock          mRepositoryMockGetSubscriptionsForUser
 
+	funcGetUserByTelegramID          func(ctx context.Context, i1 int) (u1 models.User, err error)
+	inspectFuncGetUserByTelegramID   func(ctx context.Context, i1 int)
+	afterGetUserByTelegramIDCounter  uint64
+	beforeGetUserByTelegramIDCounter uint64
+	GetUserByTelegramIDMock          mRepositoryMockGetUserByTelegramID
+
+	funcGetUsersByIDs          func(ctx context.Context, ia1 []int64) (ua1 []models.User, err error)
+	inspectFuncGetUsersByIDs   func(ctx context.Context, ia1 []int64)
+	afterGetUsersByIDsCounter  uint64
+	beforeGetUsersByIDsCounter uint64
+	GetUsersByIDsMock          mRepositoryMockGetUsersByIDs
+
 	funcReadSubscriber          func(ctx context.Context, i1 int) (s1 models.Subscriber, err error)
 	inspectFuncReadSubscriber   func(ctx context.Context, i1 int)
 	afterReadSubscriberCounter  uint64
@@ -133,6 +145,12 @@ func NewRepositoryMock(t minimock.Tester) *RepositoryMock {
 
 	m.GetSubscriptionsForUserMock = mRepositoryMockGetSubscriptionsForUser{mock: m}
 	m.GetSubscriptionsForUserMock.callArgs = []*RepositoryMockGetSubscriptionsForUserParams{}
+
+	m.GetUserByTelegramIDMock = mRepositoryMockGetUserByTelegramID{mock: m}
+	m.GetUserByTelegramIDMock.callArgs = []*RepositoryMockGetUserByTelegramIDParams{}
+
+	m.GetUsersByIDsMock = mRepositoryMockGetUsersByIDs{mock: m}
+	m.GetUsersByIDsMock.callArgs = []*RepositoryMockGetUsersByIDsParams{}
 
 	m.ReadSubscriberMock = mRepositoryMockReadSubscriber{mock: m}
 	m.ReadSubscriberMock.callArgs = []*RepositoryMockReadSubscriberParams{}
@@ -1888,6 +1906,440 @@ func (m *RepositoryMock) MinimockGetSubscriptionsForUserInspect() {
 	}
 }
 
+type mRepositoryMockGetUserByTelegramID struct {
+	mock               *RepositoryMock
+	defaultExpectation *RepositoryMockGetUserByTelegramIDExpectation
+	expectations       []*RepositoryMockGetUserByTelegramIDExpectation
+
+	callArgs []*RepositoryMockGetUserByTelegramIDParams
+	mutex    sync.RWMutex
+}
+
+// RepositoryMockGetUserByTelegramIDExpectation specifies expectation struct of the Repository.GetUserByTelegramID
+type RepositoryMockGetUserByTelegramIDExpectation struct {
+	mock    *RepositoryMock
+	params  *RepositoryMockGetUserByTelegramIDParams
+	results *RepositoryMockGetUserByTelegramIDResults
+	Counter uint64
+}
+
+// RepositoryMockGetUserByTelegramIDParams contains parameters of the Repository.GetUserByTelegramID
+type RepositoryMockGetUserByTelegramIDParams struct {
+	ctx context.Context
+	i1  int
+}
+
+// RepositoryMockGetUserByTelegramIDResults contains results of the Repository.GetUserByTelegramID
+type RepositoryMockGetUserByTelegramIDResults struct {
+	u1  models.User
+	err error
+}
+
+// Expect sets up expected params for Repository.GetUserByTelegramID
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) Expect(ctx context.Context, i1 int) *mRepositoryMockGetUserByTelegramID {
+	if mmGetUserByTelegramID.mock.funcGetUserByTelegramID != nil {
+		mmGetUserByTelegramID.mock.t.Fatalf("RepositoryMock.GetUserByTelegramID mock is already set by Set")
+	}
+
+	if mmGetUserByTelegramID.defaultExpectation == nil {
+		mmGetUserByTelegramID.defaultExpectation = &RepositoryMockGetUserByTelegramIDExpectation{}
+	}
+
+	mmGetUserByTelegramID.defaultExpectation.params = &RepositoryMockGetUserByTelegramIDParams{ctx, i1}
+	for _, e := range mmGetUserByTelegramID.expectations {
+		if minimock.Equal(e.params, mmGetUserByTelegramID.defaultExpectation.params) {
+			mmGetUserByTelegramID.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetUserByTelegramID.defaultExpectation.params)
+		}
+	}
+
+	return mmGetUserByTelegramID
+}
+
+// Inspect accepts an inspector function that has same arguments as the Repository.GetUserByTelegramID
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) Inspect(f func(ctx context.Context, i1 int)) *mRepositoryMockGetUserByTelegramID {
+	if mmGetUserByTelegramID.mock.inspectFuncGetUserByTelegramID != nil {
+		mmGetUserByTelegramID.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetUserByTelegramID")
+	}
+
+	mmGetUserByTelegramID.mock.inspectFuncGetUserByTelegramID = f
+
+	return mmGetUserByTelegramID
+}
+
+// Return sets up results that will be returned by Repository.GetUserByTelegramID
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) Return(u1 models.User, err error) *RepositoryMock {
+	if mmGetUserByTelegramID.mock.funcGetUserByTelegramID != nil {
+		mmGetUserByTelegramID.mock.t.Fatalf("RepositoryMock.GetUserByTelegramID mock is already set by Set")
+	}
+
+	if mmGetUserByTelegramID.defaultExpectation == nil {
+		mmGetUserByTelegramID.defaultExpectation = &RepositoryMockGetUserByTelegramIDExpectation{mock: mmGetUserByTelegramID.mock}
+	}
+	mmGetUserByTelegramID.defaultExpectation.results = &RepositoryMockGetUserByTelegramIDResults{u1, err}
+	return mmGetUserByTelegramID.mock
+}
+
+//Set uses given function f to mock the Repository.GetUserByTelegramID method
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) Set(f func(ctx context.Context, i1 int) (u1 models.User, err error)) *RepositoryMock {
+	if mmGetUserByTelegramID.defaultExpectation != nil {
+		mmGetUserByTelegramID.mock.t.Fatalf("Default expectation is already set for the Repository.GetUserByTelegramID method")
+	}
+
+	if len(mmGetUserByTelegramID.expectations) > 0 {
+		mmGetUserByTelegramID.mock.t.Fatalf("Some expectations are already set for the Repository.GetUserByTelegramID method")
+	}
+
+	mmGetUserByTelegramID.mock.funcGetUserByTelegramID = f
+	return mmGetUserByTelegramID.mock
+}
+
+// When sets expectation for the Repository.GetUserByTelegramID which will trigger the result defined by the following
+// Then helper
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) When(ctx context.Context, i1 int) *RepositoryMockGetUserByTelegramIDExpectation {
+	if mmGetUserByTelegramID.mock.funcGetUserByTelegramID != nil {
+		mmGetUserByTelegramID.mock.t.Fatalf("RepositoryMock.GetUserByTelegramID mock is already set by Set")
+	}
+
+	expectation := &RepositoryMockGetUserByTelegramIDExpectation{
+		mock:   mmGetUserByTelegramID.mock,
+		params: &RepositoryMockGetUserByTelegramIDParams{ctx, i1},
+	}
+	mmGetUserByTelegramID.expectations = append(mmGetUserByTelegramID.expectations, expectation)
+	return expectation
+}
+
+// Then sets up Repository.GetUserByTelegramID return parameters for the expectation previously defined by the When method
+func (e *RepositoryMockGetUserByTelegramIDExpectation) Then(u1 models.User, err error) *RepositoryMock {
+	e.results = &RepositoryMockGetUserByTelegramIDResults{u1, err}
+	return e.mock
+}
+
+// GetUserByTelegramID implements Repository
+func (mmGetUserByTelegramID *RepositoryMock) GetUserByTelegramID(ctx context.Context, i1 int) (u1 models.User, err error) {
+	mm_atomic.AddUint64(&mmGetUserByTelegramID.beforeGetUserByTelegramIDCounter, 1)
+	defer mm_atomic.AddUint64(&mmGetUserByTelegramID.afterGetUserByTelegramIDCounter, 1)
+
+	if mmGetUserByTelegramID.inspectFuncGetUserByTelegramID != nil {
+		mmGetUserByTelegramID.inspectFuncGetUserByTelegramID(ctx, i1)
+	}
+
+	mm_params := &RepositoryMockGetUserByTelegramIDParams{ctx, i1}
+
+	// Record call args
+	mmGetUserByTelegramID.GetUserByTelegramIDMock.mutex.Lock()
+	mmGetUserByTelegramID.GetUserByTelegramIDMock.callArgs = append(mmGetUserByTelegramID.GetUserByTelegramIDMock.callArgs, mm_params)
+	mmGetUserByTelegramID.GetUserByTelegramIDMock.mutex.Unlock()
+
+	for _, e := range mmGetUserByTelegramID.GetUserByTelegramIDMock.expectations {
+		if minimock.Equal(e.params, mm_params) {
+			mm_atomic.AddUint64(&e.Counter, 1)
+			return e.results.u1, e.results.err
+		}
+	}
+
+	if mmGetUserByTelegramID.GetUserByTelegramIDMock.defaultExpectation != nil {
+		mm_atomic.AddUint64(&mmGetUserByTelegramID.GetUserByTelegramIDMock.defaultExpectation.Counter, 1)
+		mm_want := mmGetUserByTelegramID.GetUserByTelegramIDMock.defaultExpectation.params
+		mm_got := RepositoryMockGetUserByTelegramIDParams{ctx, i1}
+		if mm_want != nil && !minimock.Equal(*mm_want, mm_got) {
+			mmGetUserByTelegramID.t.Errorf("RepositoryMock.GetUserByTelegramID got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
+		}
+
+		mm_results := mmGetUserByTelegramID.GetUserByTelegramIDMock.defaultExpectation.results
+		if mm_results == nil {
+			mmGetUserByTelegramID.t.Fatal("No results are set for the RepositoryMock.GetUserByTelegramID")
+		}
+		return (*mm_results).u1, (*mm_results).err
+	}
+	if mmGetUserByTelegramID.funcGetUserByTelegramID != nil {
+		return mmGetUserByTelegramID.funcGetUserByTelegramID(ctx, i1)
+	}
+	mmGetUserByTelegramID.t.Fatalf("Unexpected call to RepositoryMock.GetUserByTelegramID. %v %v", ctx, i1)
+	return
+}
+
+// GetUserByTelegramIDAfterCounter returns a count of finished RepositoryMock.GetUserByTelegramID invocations
+func (mmGetUserByTelegramID *RepositoryMock) GetUserByTelegramIDAfterCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetUserByTelegramID.afterGetUserByTelegramIDCounter)
+}
+
+// GetUserByTelegramIDBeforeCounter returns a count of RepositoryMock.GetUserByTelegramID invocations
+func (mmGetUserByTelegramID *RepositoryMock) GetUserByTelegramIDBeforeCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetUserByTelegramID.beforeGetUserByTelegramIDCounter)
+}
+
+// Calls returns a list of arguments used in each call to RepositoryMock.GetUserByTelegramID.
+// The list is in the same order as the calls were made (i.e. recent calls have a higher index)
+func (mmGetUserByTelegramID *mRepositoryMockGetUserByTelegramID) Calls() []*RepositoryMockGetUserByTelegramIDParams {
+	mmGetUserByTelegramID.mutex.RLock()
+
+	argCopy := make([]*RepositoryMockGetUserByTelegramIDParams, len(mmGetUserByTelegramID.callArgs))
+	copy(argCopy, mmGetUserByTelegramID.callArgs)
+
+	mmGetUserByTelegramID.mutex.RUnlock()
+
+	return argCopy
+}
+
+// MinimockGetUserByTelegramIDDone returns true if the count of the GetUserByTelegramID invocations corresponds
+// the number of defined expectations
+func (m *RepositoryMock) MinimockGetUserByTelegramIDDone() bool {
+	for _, e := range m.GetUserByTelegramIDMock.expectations {
+		if mm_atomic.LoadUint64(&e.Counter) < 1 {
+			return false
+		}
+	}
+
+	// if default expectation was set then invocations count should be greater than zero
+	if m.GetUserByTelegramIDMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetUserByTelegramIDCounter) < 1 {
+		return false
+	}
+	// if func was set then invocations count should be greater than zero
+	if m.funcGetUserByTelegramID != nil && mm_atomic.LoadUint64(&m.afterGetUserByTelegramIDCounter) < 1 {
+		return false
+	}
+	return true
+}
+
+// MinimockGetUserByTelegramIDInspect logs each unmet expectation
+func (m *RepositoryMock) MinimockGetUserByTelegramIDInspect() {
+	for _, e := range m.GetUserByTelegramIDMock.expectations {
+		if mm_atomic.LoadUint64(&e.Counter) < 1 {
+			m.t.Errorf("Expected call to RepositoryMock.GetUserByTelegramID with params: %#v", *e.params)
+		}
+	}
+
+	// if default expectation was set then invocations count should be greater than zero
+	if m.GetUserByTelegramIDMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetUserByTelegramIDCounter) < 1 {
+		if m.GetUserByTelegramIDMock.defaultExpectation.params == nil {
+			m.t.Error("Expected call to RepositoryMock.GetUserByTelegramID")
+		} else {
+			m.t.Errorf("Expected call to RepositoryMock.GetUserByTelegramID with params: %#v", *m.GetUserByTelegramIDMock.defaultExpectation.params)
+		}
+	}
+	// if func was set then invocations count should be greater than zero
+	if m.funcGetUserByTelegramID != nil && mm_atomic.LoadUint64(&m.afterGetUserByTelegramIDCounter) < 1 {
+		m.t.Error("Expected call to RepositoryMock.GetUserByTelegramID")
+	}
+}
+
+type mRepositoryMockGetUsersByIDs struct {
+	mock               *RepositoryMock
+	defaultExpectation *RepositoryMockGetUsersByIDsExpectation
+	expectations       []*RepositoryMockGetUsersByIDsExpectation
+
+	callArgs []*RepositoryMockGetUsersByIDsParams
+	mutex    sync.RWMutex
+}
+
+// RepositoryMockGetUsersByIDsExpectation specifies expectation struct of the Repository.GetUsersByIDs
+type RepositoryMockGetUsersByIDsExpectation struct {
+	mock    *RepositoryMock
+	params  *RepositoryMockGetUsersByIDsParams
+	results *RepositoryMockGetUsersByIDsResults
+	Counter uint64
+}
+
+// RepositoryMockGetUsersByIDsParams contains parameters of the Repository.GetUsersByIDs
+type RepositoryMockGetUsersByIDsParams struct {
+	ctx context.Context
+	ia1 []int64
+}
+
+// RepositoryMockGetUsersByIDsResults contains results of the Repository.GetUsersByIDs
+type RepositoryMockGetUsersByIDsResults struct {
+	ua1 []models.User
+	err error
+}
+
+// Expect sets up expected params for Repository.GetUsersByIDs
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) Expect(ctx context.Context, ia1 []int64) *mRepositoryMockGetUsersByIDs {
+	if mmGetUsersByIDs.mock.funcGetUsersByIDs != nil {
+		mmGetUsersByIDs.mock.t.Fatalf("RepositoryMock.GetUsersByIDs mock is already set by Set")
+	}
+
+	if mmGetUsersByIDs.defaultExpectation == nil {
+		mmGetUsersByIDs.defaultExpectation = &RepositoryMockGetUsersByIDsExpectation{}
+	}
+
+	mmGetUsersByIDs.defaultExpectation.params = &RepositoryMockGetUsersByIDsParams{ctx, ia1}
+	for _, e := range mmGetUsersByIDs.expectations {
+		if minimock.Equal(e.params, mmGetUsersByIDs.defaultExpectation.params) {
+			mmGetUsersByIDs.mock.t.Fatalf("Expectation set by When has same params: %#v", *mmGetUsersByIDs.defaultExpectation.params)
+		}
+	}
+
+	return mmGetUsersByIDs
+}
+
+// Inspect accepts an inspector function that has same arguments as the Repository.GetUsersByIDs
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) Inspect(f func(ctx context.Context, ia1 []int64)) *mRepositoryMockGetUsersByIDs {
+	if mmGetUsersByIDs.mock.inspectFuncGetUsersByIDs != nil {
+		mmGetUsersByIDs.mock.t.Fatalf("Inspect function is already set for RepositoryMock.GetUsersByIDs")
+	}
+
+	mmGetUsersByIDs.mock.inspectFuncGetUsersByIDs = f
+
+	return mmGetUsersByIDs
+}
+
+// Return sets up results that will be returned by Repository.GetUsersByIDs
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) Return(ua1 []models.User, err error) *RepositoryMock {
+	if mmGetUsersByIDs.mock.funcGetUsersByIDs != nil {
+		mmGetUsersByIDs.mock.t.Fatalf("RepositoryMock.GetUsersByIDs mock is already set by Set")
+	}
+
+	if mmGetUsersByIDs.defaultExpectation == nil {
+		mmGetUsersByIDs.defaultExpectation = &RepositoryMockGetUsersByIDsExpectation{mock: mmGetUsersByIDs.mock}
+	}
+	mmGetUsersByIDs.defaultExpectation.results = &RepositoryMockGetUsersByIDsResults{ua1, err}
+	return mmGetUsersByIDs.mock
+}
+
+//Set uses given function f to mock the Repository.GetUsersByIDs method
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) Set(f func(ctx context.Context, ia1 []int64) (ua1 []models.User, err error)) *RepositoryMock {
+	if mmGetUsersByIDs.defaultExpectation != nil {
+		mmGetUsersByIDs.mock.t.Fatalf("Default expectation is already set for the Repository.GetUsersByIDs method")
+	}
+
+	if len(mmGetUsersByIDs.expectations) > 0 {
+		mmGetUsersByIDs.mock.t.Fatalf("Some expectations are already set for the Repository.GetUsersByIDs method")
+	}
+
+	mmGetUsersByIDs.mock.funcGetUsersByIDs = f
+	return mmGetUsersByIDs.mock
+}
+
+// When sets expectation for the Repository.GetUsersByIDs which will trigger the result defined by the following
+// Then helper
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) When(ctx context.Context, ia1 []int64) *RepositoryMockGetUsersByIDsExpectation {
+	if mmGetUsersByIDs.mock.funcGetUsersByIDs != nil {
+		mmGetUsersByIDs.mock.t.Fatalf("RepositoryMock.GetUsersByIDs mock is already set by Set")
+	}
+
+	expectation := &RepositoryMockGetUsersByIDsExpectation{
+		mock:   mmGetUsersByIDs.mock,
+		params: &RepositoryMockGetUsersByIDsParams{ctx, ia1},
+	}
+	mmGetUsersByIDs.expectations = append(mmGetUsersByIDs.expectations, expectation)
+	return expectation
+}
+
+// Then sets up Repository.GetUsersByIDs return parameters for the expectation previously defined by the When method
+func (e *RepositoryMockGetUsersByIDsExpectation) Then(ua1 []models.User, err error) *RepositoryMock {
+	e.results = &RepositoryMockGetUsersByIDsResults{ua1, err}
+	return e.mock
+}
+
+// GetUsersByIDs implements Repository
+func (mmGetUsersByIDs *RepositoryMock) GetUsersByIDs(ctx context.Context, ia1 []int64) (ua1 []models.User, err error) {
+	mm_atomic.AddUint64(&mmGetUsersByIDs.beforeGetUsersByIDsCounter, 1)
+	defer mm_atomic.AddUint64(&mmGetUsersByIDs.afterGetUsersByIDsCounter, 1)
+
+	if mmGetUsersByIDs.inspectFuncGetUsersByIDs != nil {
+		mmGetUsersByIDs.inspectFuncGetUsersByIDs(ctx, ia1)
+	}
+
+	mm_params := &RepositoryMockGetUsersByIDsParams{ctx, ia1}
+
+	// Record call args
+	mmGetUsersByIDs.GetUsersByIDsMock.mutex.Lock()
+	mmGetUsersByIDs.GetUsersByIDsMock.callArgs = append(mmGetUsersByIDs.GetUsersByIDsMock.callArgs, mm_params)
+	mmGetUsersByIDs.GetUsersByIDsMock.mutex.Unlock()
+
+	for _, e := range mmGetUsersByIDs.GetUsersByIDsMock.expectations {
+		if minimock.Equal(e.params, mm_params) {
+			mm_atomic.AddUint64(&e.Counter, 1)
+			return e.results.ua1, e.results.err
+		}
+	}
+
+	if mmGetUsersByIDs.GetUsersByIDsMock.defaultExpectation != nil {
+		mm_atomic.AddUint64(&mmGetUsersByIDs.GetUsersByIDsMock.defaultExpectation.Counter, 1)
+		mm_want := mmGetUsersByIDs.GetUsersByIDsMock.defaultExpectation.params
+		mm_got := RepositoryMockGetUsersByIDsParams{ctx, ia1}
+		if mm_want != nil && !minimock.Equal(*mm_want, mm_got) {
+			mmGetUsersByIDs.t.Errorf("RepositoryMock.GetUsersByIDs got unexpected parameters, want: %#v, got: %#v%s\n", *mm_want, mm_got, minimock.Diff(*mm_want, mm_got))
+		}
+
+		mm_results := mmGetUsersByIDs.GetUsersByIDsMock.defaultExpectation.results
+		if mm_results == nil {
+			mmGetUsersByIDs.t.Fatal("No results are set for the RepositoryMock.GetUsersByIDs")
+		}
+		return (*mm_results).ua1, (*mm_results).err
+	}
+	if mmGetUsersByIDs.funcGetUsersByIDs != nil {
+		return mmGetUsersByIDs.funcGetUsersByIDs(ctx, ia1)
+	}
+	mmGetUsersByIDs.t.Fatalf("Unexpected call to RepositoryMock.GetUsersByIDs. %v %v", ctx, ia1)
+	return
+}
+
+// GetUsersByIDsAfterCounter returns a count of finished RepositoryMock.GetUsersByIDs invocations
+func (mmGetUsersByIDs *RepositoryMock) GetUsersByIDsAfterCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetUsersByIDs.afterGetUsersByIDsCounter)
+}
+
+// GetUsersByIDsBeforeCounter returns a count of RepositoryMock.GetUsersByIDs invocations
+func (mmGetUsersByIDs *RepositoryMock) GetUsersByIDsBeforeCounter() uint64 {
+	return mm_atomic.LoadUint64(&mmGetUsersByIDs.beforeGetUsersByIDsCounter)
+}
+
+// Calls returns a list of arguments used in each call to RepositoryMock.GetUsersByIDs.
+// The list is in the same order as the calls were made (i.e. recent calls have a higher index)
+func (mmGetUsersByIDs *mRepositoryMockGetUsersByIDs) Calls() []*RepositoryMockGetUsersByIDsParams {
+	mmGetUsersByIDs.mutex.RLock()
+
+	argCopy := make([]*RepositoryMockGetUsersByIDsParams, len(mmGetUsersByIDs.callArgs))
+	copy(argCopy, mmGetUsersByIDs.callArgs)
+
+	mmGetUsersByIDs.mutex.RUnlock()
+
+	return argCopy
+}
+
+// MinimockGetUsersByIDsDone returns true if the count of the GetUsersByIDs invocations corresponds
+// the number of defined expectations
+func (m *RepositoryMock) MinimockGetUsersByIDsDone() bool {
+	for _, e := range m.GetUsersByIDsMock.expectations {
+		if mm_atomic.LoadUint64(&e.Counter) < 1 {
+			return false
+		}
+	}
+
+	// if default expectation was set then invocations count should be greater than zero
+	if m.GetUsersByIDsMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetUsersByIDsCounter) < 1 {
+		return false
+	}
+	// if func was set then invocations count should be greater than zero
+	if m.funcGetUsersByIDs != nil && mm_atomic.LoadUint64(&m.afterGetUsersByIDsCounter) < 1 {
+		return false
+	}
+	return true
+}
+
+// MinimockGetUsersByIDsInspect logs each unmet expectation
+func (m *RepositoryMock) MinimockGetUsersByIDsInspect() {
+	for _, e := range m.GetUsersByIDsMock.expectations {
+		if mm_atomic.LoadUint64(&e.Counter) < 1 {
+			m.t.Errorf("Expected call to RepositoryMock.GetUsersByIDs with params: %#v", *e.params)
+		}
+	}
+
+	// if default expectation was set then invocations count should be greater than zero
+	if m.GetUsersByIDsMock.defaultExpectation != nil && mm_atomic.LoadUint64(&m.afterGetUsersByIDsCounter) < 1 {
+		if m.GetUsersByIDsMock.defaultExpectation.params == nil {
+			m.t.Error("Expected call to RepositoryMock.GetUsersByIDs")
+		} else {
+			m.t.Errorf("Expected call to RepositoryMock.GetUsersByIDs with params: %#v", *m.GetUsersByIDsMock.defaultExpectation.params)
+		}
+	}
+	// if func was set then invocations count should be greater than zero
+	if m.funcGetUsersByIDs != nil && mm_atomic.LoadUint64(&m.afterGetUsersByIDsCounter) < 1 {
+		m.t.Error("Expected call to RepositoryMock.GetUsersByIDs")
+	}
+}
+
 type mRepositoryMockReadSubscriber struct {
 	mock               *RepositoryMock
 	defaultExpectation *RepositoryMockReadSubscriberExpectation
@@ -3206,6 +3658,10 @@ func (m *RepositoryMock) MinimockFinish() {
 
 		m.MinimockGetSubscriptionsForUserInspect()
 
+		m.MinimockGetUserByTelegramIDInspect()
+
+		m.MinimockGetUsersByIDsInspect()
+
 		m.MinimockReadSubscriberInspect()
 
 		m.MinimockReadSubscriptionInspect()
@@ -3248,6 +3704,8 @@ func (m *RepositoryMock) minimockDone() bool {
 		m.MinimockDeleteUserDone() &&
 		m.MinimockGetSubscribersForSubscriptionDone() &&
 		m.MinimockGetSubscriptionsForUserDone() &&
+		m.MinimockGetUserByTelegramIDDone() &&
+		m.MinimockGetUsersByIDsDone() &&
 		m.MinimockReadSubscriberDone() &&
 		m.MinimockReadSubscriptionDone() &&
 		m.MinimockReadUserDone() &&

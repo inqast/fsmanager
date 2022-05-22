@@ -21,16 +21,18 @@ func TestReadUser(t *testing.T) {
 	defer mc.Finish()
 
 	testId := 1
+	testChatID := 2
 	testName := "testName"
 	testPwd := "testPwd"
 	testTime := sql.NullTime{Time: time.Now()}
 
 	mockRepo := NewRepositoryMock(mc)
 	mockRepo.ReadUserMock.Return(models.User{
-		ID:        testId,
-		Name:      testName,
-		Pwd:       testPwd,
-		CreatedAt: testTime,
+		ID:         testId,
+		TelegramID: testChatID,
+		Name:       testName,
+		Pwd:        testPwd,
+		CreatedAt:  testTime,
 	}, nil)
 	svc := New(mockRepo)
 
@@ -39,6 +41,7 @@ func TestReadUser(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, user.Id, int64(testId))
+	assert.Equal(t, user.TelegramId, int64(testChatID))
 	assert.Equal(t, user.Name, testName)
 	assert.Equal(t, user.Pwd, testPwd)
 	assert.Equal(t, user.CreatedAt, testTime.Time.Format(time.RFC3339))

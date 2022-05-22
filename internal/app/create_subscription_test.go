@@ -17,11 +17,11 @@ func TestCreateSubscription(t *testing.T) {
 	defer mc.Finish()
 
 	testId := 1
-	testOwnerID := 1
+	testChatID := 1
 	testServiceName := "testService"
 	testCapacity := 5
 	testPriceInCentiUnits := 500
-	testPaymentDate := sql.NullTime{Time: time.Now()}
+	testPaymentDay := 28
 	testCreatedAt := sql.NullTime{Time: time.Now()}
 
 	mockRepo := NewRepositoryMock(mc)
@@ -31,11 +31,11 @@ func TestCreateSubscription(t *testing.T) {
 	ctx := context.Background()
 	id, err := svc.CreateSubscription(ctx, &api.Subscription{
 		Id:                int64(testId),
-		OwnerID:           int64(testOwnerID),
+		ChatId:            int64(testChatID),
 		ServiceName:       testServiceName,
 		Capacity:          int64(testCapacity),
 		PriceInCentiUnits: int64(testPriceInCentiUnits),
-		PaymentDate:       testPaymentDate.Time.Format(time.RFC3339),
+		PaymentDay:        int64(testPaymentDay),
 		CreatedAt:         testCreatedAt.Time.Format(time.RFC3339),
 	})
 
