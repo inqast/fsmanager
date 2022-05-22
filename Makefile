@@ -21,6 +21,16 @@ build:
 		" \
 		-o ./bin/service$(shell go env GOEXE) ./cmd/server/main.go
 
+.PHONY: build-telegram
+build-telegram:
+	go mod download && CGO_ENABLED=0  go build \
+		-tags='no_mysql no_sqlite3' \
+		-ldflags=" \
+			-X 'github.com/$(SERVICE_PATH)/internal/config.version=$(VERSION)' \
+			-X 'github.com/$(SERVICE_PATH)/internal/config.commitHash=$(COMMIT_HASH)' \
+		" \
+		-o ./bin/telegram$(shell go env GOEXE) ./cmd/telegram/main.go
+
 protobuf:
 	protoc --proto_path=./api \
 		--go_out=pkg/api \

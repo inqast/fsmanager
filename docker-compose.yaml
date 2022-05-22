@@ -18,6 +18,20 @@ services:
     volumes:
       - ./config.yml:/root/config.yml
 
+  telegram:
+    build:
+      context: .
+      dockerfile: docker/telegram/Dockerfile
+    restart: unless-stopped
+    networks:
+      - service
+    links:
+      - service
+    depends_on:
+      - service
+    volumes:
+      - ./config.yml:/root/config.yml
+
   postgres:
     image: postgres:latest
     healthcheck:
@@ -34,6 +48,8 @@ services:
       APP_DB_PASS: docker
     networks:
       - service
+    ports:
+      - "5432:5432"
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     volumes:
       - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf

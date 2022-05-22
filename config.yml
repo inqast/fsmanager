@@ -4,7 +4,7 @@ project:
   environment: development
 
 grpc:
-  host: 0.0.0.0
+  host: service
   port: 8082
   maxConnectionIdle: 5 # Minutes
   timeout: 15 # Seconds
