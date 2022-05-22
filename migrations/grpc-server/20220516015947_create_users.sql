@@ -3,7 +3,8 @@
 CREATE TABLE users (
     id          bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name        varchar(255) NOT NULL,
-    pwd         varchar(255) NOT NULL,
+    pwd         varchar(255),
+    telegram_id bigint,
     created_at  timestamp NOT NULL
 
 );
