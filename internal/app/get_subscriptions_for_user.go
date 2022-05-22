@@ -22,11 +22,11 @@ func (t *tserver) GetSubscriptionsForUser(ctx context.Context, req *api.ID) (*ap
 	for _, subscription := range subscriptions {
 		externalSubscriptions = append(externalSubscriptions, &api.Subscription{
 			Id:                int64(subscription.ID),
-			OwnerID:           int64(subscription.OwnerID),
+			ChatId:            int64(subscription.ChatID),
 			ServiceName:       subscription.ServiceName,
 			Capacity:          int64(subscription.Capacity),
 			PriceInCentiUnits: int64(subscription.PriceInCentiUnits),
-			PaymentDate:       subscription.PaymentDate.Time.Format(time.RFC3339),
+			PaymentDay:        int64(subscription.PaymentDay),
 			CreatedAt:         subscription.CreatedAt.Time.Format(time.RFC3339),
 		})
 	}

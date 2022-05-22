@@ -20,11 +20,11 @@ func (t *tserver) ReadSubscription(ctx context.Context, req *api.ID) (*api.Subsc
 
 	return &api.Subscription{
 		Id:                int64(subscription.ID),
-		OwnerID:           int64(subscription.OwnerID),
+		ChatId:            int64(subscription.ChatID),
 		ServiceName:       subscription.ServiceName,
 		Capacity:          int64(subscription.Capacity),
 		PriceInCentiUnits: int64(subscription.PriceInCentiUnits),
-		PaymentDate:       subscription.PaymentDate.Time.Format(time.RFC3339),
+		PaymentDay:        int64(subscription.PaymentDay),
 		CreatedAt:         subscription.CreatedAt.Time.Format(time.RFC3339),
 	}, err
 }

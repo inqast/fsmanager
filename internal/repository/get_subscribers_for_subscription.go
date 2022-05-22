@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 
 	"github.com/inqast/fsmanager/internal/models"
 )
@@ -22,7 +23,7 @@ func (r *repository) GetSubscribersForSubscription(ctx context.Context, subscrip
 		return
 	}
 	defer rows.Close()
-
+	log.Println(subscriptionID)
 	for rows.Next() {
 		var subscriber models.Subscriber
 		if err = rows.Scan(
@@ -38,6 +39,7 @@ func (r *repository) GetSubscribersForSubscription(ctx context.Context, subscrip
 
 		subscribers = append(subscribers, subscriber)
 	}
+	log.Println(len(subscribers))
 
 	return
 }

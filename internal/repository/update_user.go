@@ -11,7 +11,8 @@ func (r *repository) UpdateUser(ctx context.Context, user models.User) (err erro
 	const query = `
 		update users
 		set	name = $2,
-			pwd = $3
+			pwd = $3,
+			telegram_id = $4
 		where id = $1;
 	`
 
@@ -19,6 +20,7 @@ func (r *repository) UpdateUser(ctx context.Context, user models.User) (err erro
 		user.ID,
 		user.Name,
 		user.Pwd,
+		user.TelegramID,
 	)
 	if cmd.RowsAffected() == 0 {
 		err = ErrNotFound

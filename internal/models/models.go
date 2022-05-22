@@ -3,19 +3,20 @@ package models
 import "database/sql"
 
 type User struct {
-	ID        int
-	Name      string
-	Pwd       string
-	CreatedAt sql.NullTime
+	ID         int
+	Name       string
+	Pwd        string
+	TelegramID int
+	CreatedAt  sql.NullTime
 }
 
 type Subscription struct {
 	ID                int
-	OwnerID           int
+	ChatID            int
 	ServiceName       string
 	Capacity          int
 	PriceInCentiUnits int
-	PaymentDate       sql.NullTime
+	PaymentDay        int
 	CreatedAt         sql.NullTime
 }
 

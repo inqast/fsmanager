@@ -13,6 +13,7 @@ func (r *repository) ReadUser(ctx context.Context, ID int) (user models.User, er
 		select id,
 			   name,
 			   pwd,
+			   telegram_id,
 			   created_at
 		  from users
 		where id = $1;
@@ -21,6 +22,7 @@ func (r *repository) ReadUser(ctx context.Context, ID int) (user models.User, er
 		&user.ID,
 		&user.Name,
 		&user.Pwd,
+		&user.TelegramID,
 		&user.CreatedAt,
 	)
 

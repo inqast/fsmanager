@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"time"
 
 	"github.com/inqast/fsmanager/internal/models"
 )
@@ -11,11 +10,11 @@ func (r *repository) CreateSubscription(ctx context.Context, subscription models
 
 	const query = `
 		insert into subscriptions (
-			owner_id,
+			chat_id,
 			service_name,
 			capacity,
 			price_in_centi_units,
-			payment_date,
+			payment_day,
 			created_at
 		) VALUES (
 			$1, $2, $3, $4, $5, now()
@@ -23,11 +22,11 @@ func (r *repository) CreateSubscription(ctx context.Context, subscription models
 	`
 
 	err = r.pool.QueryRow(ctx, query,
-		subscription.OwnerID,
+		subscription.ChatID,
 		subscription.ServiceName,
 		subscription.Capacity,
 		subscription.PriceInCentiUnits,
-		subscription.PaymentDate.Time.Format(time.RFC3339),
+		subscription.PaymentDay,
 	).Scan(&ID)
 
 	return

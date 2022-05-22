@@ -10,8 +10,9 @@ import (
 func (t *tserver) CreateUser(ctx context.Context, req *api.User) (*api.ID, error) {
 
 	var user = models.User{
-		Name: req.Name,
-		Pwd:  req.Pwd,
+		Name:       req.Name,
+		Pwd:        req.Pwd,
+		TelegramID: int(req.TelegramId),
 	}
 
 	ID, err := t.repo.CreateUser(ctx, user)

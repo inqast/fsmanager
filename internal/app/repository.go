@@ -11,6 +11,8 @@ type Repository interface {
 	ReadUser(context.Context, int) (models.User, error)
 	UpdateUser(context.Context, models.User) error
 	DeleteUser(context.Context, int) error
+	GetUsersByIDs(context.Context, []int64) ([]models.User, error)
+	GetUserByTelegramID(context.Context, int) (models.User, error)
 
 	CreateSubscription(context.Context, models.Subscription) (int, error)
 	ReadSubscription(context.Context, int) (models.Subscription, error)

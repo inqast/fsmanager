@@ -19,9 +19,10 @@ func (t *tserver) ReadUser(ctx context.Context, req *api.ID) (*api.User, error) 
 	}
 
 	return &api.User{
-		Id:        int64(user.ID),
-		Name:      user.Name,
-		Pwd:       user.Pwd,
-		CreatedAt: user.CreatedAt.Time.Format(time.RFC3339),
+		Id:         int64(user.ID),
+		Name:       user.Name,
+		Pwd:        user.Pwd,
+		TelegramId: int64(user.TelegramID),
+		CreatedAt:  user.CreatedAt.Time.Format(time.RFC3339),
 	}, err
 }

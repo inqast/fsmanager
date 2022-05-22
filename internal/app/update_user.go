@@ -15,9 +15,10 @@ import (
 func (t *tserver) UpdateUser(ctx context.Context, req *api.User) (*emptypb.Empty, error) {
 
 	var user = models.User{
-		ID:   int(req.Id),
-		Name: req.Name,
-		Pwd:  req.Pwd,
+		ID:         int(req.Id),
+		Name:       req.Name,
+		Pwd:        req.Pwd,
+		TelegramID: int(req.TelegramId),
 	}
 
 	err := t.repo.UpdateUser(ctx, user)

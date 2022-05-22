@@ -5,8 +5,7 @@ import (
 )
 
 type tserver struct {
-	lastID int64
-	repo   Repository
+	repo Repository
 	pb.UnimplementedFamilySubServer
 }
 
