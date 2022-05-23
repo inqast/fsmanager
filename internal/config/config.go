@@ -59,10 +59,17 @@ func (dbconf *DatabaseConfig) GetConnString() string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", dbconf.Host, dbconf.Port, dbconf.User, dbconf.Pass, dbconf.Name, dbconf.SSLmode)
 }
 
+type TelegramConfig struct {
+	Token   string `yaml:"token"`
+	Timeout int    `yaml:"timeout"`
+	Offset  int    `yaml:"offset"`
+}
+
 type Config struct {
 	loaded      bool
 	Grpc        GrpcConfig        `yaml:"grpc"`
 	GrpcGateway GrpcGatewayConfig `yaml:"grpc-gateway"`
+	Telegram    TelegramConfig    `yaml:"telegram"`
 	Database    DatabaseConfig    `yaml:"database"`
 }
 

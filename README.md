@@ -1,6 +1,11 @@
 # Family Subscription Manager telegram bot
 
-to set up run `docker-compose up --build`
+### Setup
+- create config.yml from example
+- run `docker-compose up --build`
+
+### Example
+@fsmanager
 
 ### Usage
 

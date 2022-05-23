@@ -4,3 +4,4 @@
 .venv
 bin/
 _data/
+config.yml

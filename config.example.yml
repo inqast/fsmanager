@@ -1,0 +1,31 @@
+project:
+  name: Inqast Family Subscription Manager
+  debug: true
+  environment: development
+
+grpc:
+  host: service
+  port: 8082
+  maxConnectionIdle: 5 # Minutes
+  timeout: 15 # Seconds
+  maxConnectionAge: 5 # Minutes
+
+grpc-gateway:
+  host: 0.0.0.0
+  port: 8081
+
+telegram:
+  token:
+  timeout: 60
+  offset: 0
+
+database:
+  host: postgres
+  port: 5432
+  user:
+  password:
+  name: fsmanager_api
+  migrations: migrations/grpc-server
+  sslmode: disable
+  driver: pgx
+  connectRetries: 10

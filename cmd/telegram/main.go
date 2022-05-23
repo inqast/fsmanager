@@ -26,15 +26,15 @@ import (
 func main() {
 	cfg := config.GetConfigFromFile()
 
-	bot, err := tgbotapi.NewBotAPI("5393987837:AAE5ls4x1p2OGwIQB0knfF1_lh_zha9phyg")
+	bot, err := tgbotapi.NewBotAPI(cfg.Telegram.Token)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	bot.Debug = true
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	u := tgbotapi.NewUpdate(cfg.Telegram.Offset)
+	u.Timeout = cfg.Telegram.Timeout
 
 	updates := bot.GetUpdatesChan(u)
 	conn, err := grpc.Dial(cfg.Grpc.Address(), grpc.WithInsecure())
